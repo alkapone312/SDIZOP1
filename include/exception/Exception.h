@@ -6,5 +6,5 @@ namespace SDIZO {
             Exception(char* message);
             ~Exception();
             virtual char* getMessage();
-    }
+    };
 }

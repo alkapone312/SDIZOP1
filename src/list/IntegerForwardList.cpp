@@ -1,4 +1,5 @@
 #include "list/IntegerForwardList.h"
+#include "exception/Exception.h"
 
 using namespace SDIZO;
 
@@ -16,7 +17,7 @@ void IntegerForwardList::push(int value) {
 int IntegerForwardList::pop() {
     IntegerForwardListNode* buff = this->head;
     if(this->head == nullptr) {
-        throw this->LIST_EMPTY;
+        throw new Exception((char*)"Tried to pop out of empty list!");
     }
     int value  = this->head->value;
     this->head = this->head->next;

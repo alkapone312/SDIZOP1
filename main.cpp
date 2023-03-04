@@ -1,17 +1,15 @@
 #include <iostream>
-#include "list/IntegerForwardList.h"
+#include "list/IntegerDoubleSidedList.h"
+#include "exception/Exception.h"
 
 using namespace std;
 using namespace SDIZO;
 
 int main (int argc, char* argv[]) {   
-    IntegerForwardList* list = new IntegerForwardList();
-    for(int i = 0 ; i < 5 ; i ++) {
-        list->push(i);
-    }
-
-    for(int i = 0 ; i < 5 ; i ++) {
-        cout << list->pop() << endl;
+    IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+    
+    for(int i = 0 ; i < 5000; i++) {
+        list->pushBack(i);
     }
 
     return 0;

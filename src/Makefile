@@ -1,10 +1,12 @@
-all: deps archive clean
+SUBDIRS = list/ exception/
 
-deps:
-	$(MAKE) -C list/
+all: deps archive
 
-archive:
+deps: # run make file in each subdirectory
+	for dir in $(SUBDIRS); do \
+			$(MAKE) -C $$dir; \
+		done
+
+archive: # creates library named SDIZO linking all objects together
 	find . -type f -name "*.o" | xargs ar rsc ../lib/libSDIZO.a
 
-clean: # deletes all *.o file in subfolders
-	find . -type f -name "*.o" | xargs rm

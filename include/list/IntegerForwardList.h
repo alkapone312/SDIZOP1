@@ -11,7 +11,6 @@ namespace SDIZO {
             int length = 0;
             int value;
         public:
-            enum Exceptions {LIST_EMPTY};
             IntegerForwardList();
             ~IntegerForwardList();
             virtual void push(int value);
