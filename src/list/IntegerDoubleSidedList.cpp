@@ -67,7 +67,20 @@ int IntegerDoubleSidedList::get(int index) {
 }
 
 int IntegerDoubleSidedList::remove(int index) {
-    
+    this->checkIndex(index);
+    IntegerDoubleSidedListNode* actual = this->head;
+    for(int i = 0 ; i < index; i++) {
+        actual = actual->next;
+    }
+    if(actual->prev != nullptr) {
+        actual->prev->next = actual->next;
+    }
+    if(actual->next != nullptr) {
+        actual->next->prev = actual->prev;
+    }
+    this->length--;
+
+    return this->getValueAndDelete(actual);
 }
 
 int IntegerDoubleSidedList::getLength() {
