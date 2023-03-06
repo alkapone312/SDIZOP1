@@ -27,11 +27,11 @@ void ConsoleUI::menu(string* options) {
 }
 
 void ConsoleUI::info(string messsage) {
-    cout << "Info message: " << messsage << endl;
+    cout << "\u001b[44mInfo message:\u001b[0m " << messsage << endl;
 }
 
 void ConsoleUI::error(string errorMessage) {
-    cout << "ERROR: " << errorMessage << endl;
+    cout << "\u001b[41;1mERROR:\u001b[0m " << errorMessage << endl;
 }
 
 int ConsoleUI::stringToNumber(string potentialNumber) {
