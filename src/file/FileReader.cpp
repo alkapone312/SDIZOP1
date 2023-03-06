@@ -5,7 +5,7 @@
 using namespace SDIZO;
 using namespace std;
 
-FileReader::FileReader(char* fileName) {
+FileReader::FileReader(string fileName) {
     this->file.open(fileName);
 }
 
@@ -13,10 +13,13 @@ FileReader::~FileReader() {
     this->file.close();
 }
 
-void FileReader::getData(char* data) {
+string FileReader::getData() {
+    string data;
     this->file >> data;
+
+    return data;
 }
 
 bool FileReader::isData() {
-    return this->file.eof();
+    return !this->file.eof();
 }

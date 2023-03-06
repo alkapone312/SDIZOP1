@@ -1,4 +1,4 @@
-SUBDIRS = list/ exception/
+SUBDIRS = list/ exception/ file/
 
 all: deps archive
 

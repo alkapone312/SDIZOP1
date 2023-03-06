@@ -5,9 +5,9 @@ namespace SDIZO {
         private:
             std::ifstream file;
         public:
-            FileReader(char* fileName);
+            FileReader(std::string fileName);
             ~FileReader();
-            virtual void getData(char* data);
+            virtual std::string getData();
             virtual bool isData();
     };
 }
