@@ -1,6 +1,5 @@
 #include "list/IntegerDoubleSidedList.h"
 #include "exception/Exception.h"
-#include <iostream>
 
 using namespace SDIZO;
 
@@ -34,6 +33,8 @@ void IntegerDoubleSidedList::pushBack(int value) {
 
 int IntegerDoubleSidedList::popFront() {
     if(!this->length) {
+        this->head = nullptr;
+        this->tail = nullptr;
         throw new Exception((char*)"Tried to popFront() out of empty array!");
     }
     IntegerDoubleSidedListNode* oldHead = this->head;
@@ -46,6 +47,8 @@ int IntegerDoubleSidedList::popFront() {
 
 int IntegerDoubleSidedList::popBack() {
     if(!this->length) {
+        this->head = nullptr;
+        this->tail = nullptr;
         throw new Exception((char*)"Tried to popBack() out of empty array!");
     }
     IntegerDoubleSidedListNode* oldTail = this->tail;
@@ -132,4 +135,27 @@ int IntegerDoubleSidedList::getValueAndDelete(IntegerDoubleSidedListNode* node) 
     delete node;
 
     return value;
+}
+
+bool IntegerDoubleSidedList::isItem() {
+    return this->actual != nullptr;
+}
+
+void IntegerDoubleSidedList::next() {
+    this->actual = this->actual->next;
+}
+
+void IntegerDoubleSidedList::prev() {
+    this->actual = this->actual->prev;
+}
+
+int IntegerDoubleSidedList::getActual() {
+    return this->actual->value;
+}
+
+void IntegerDoubleSidedList::setActual(int index) {
+    this->actual = this->head;
+    for(int i = 0 ; i < index; i++) {
+        this->actual = this->actual->next;
+    }
 }

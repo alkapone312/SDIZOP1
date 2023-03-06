@@ -1,7 +1,7 @@
 namespace SDIZO {
     struct IntegerDoubleSidedListNode {
-        IntegerDoubleSidedListNode* prev;
-        IntegerDoubleSidedListNode* next;
+        IntegerDoubleSidedListNode* prev = nullptr;
+        IntegerDoubleSidedListNode* next = nullptr;
         int value;
     };
 
@@ -9,6 +9,7 @@ namespace SDIZO {
         private:
             IntegerDoubleSidedListNode* head;
             IntegerDoubleSidedListNode* tail;
+            IntegerDoubleSidedListNode* actual = head;
             int length = 0;
         public:
             IntegerDoubleSidedList();
@@ -77,6 +78,39 @@ namespace SDIZO {
              */
             virtual int find(int value);
 
+            /**
+             * @brief Checks whether actual item is not null
+             * 
+             * @return true 
+             * @return false 
+             */
+            virtual bool isItem();
+
+            /**
+             * @brief Changes actual pointer to next member.
+             * 
+             */
+            virtual void next();
+
+            /**
+             * @brief Changes actual pointer to previous member.
+             * 
+             */
+            virtual void prev();
+
+            /**
+             * @brief Gets the actual list item
+             * 
+             * @return int
+             */
+            virtual int getActual();
+
+            /**
+             * @brief Sets the actual pointer to an index
+             * 
+             * @param index 
+             */
+            virtual void setActual(int index);
         private:
             /**
              * @brief Deletes connection between two nodes in given order.
