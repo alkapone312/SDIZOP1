@@ -125,7 +125,7 @@ bool IntegerDoubleSidedList::setIfEmpty(IntegerDoubleSidedListNode* node) {
 }
 
 void IntegerDoubleSidedList::checkIndex(int index) {
-    if(index >= this->length && index < 0) {
+    if(index >= this->length || index < 0) {
         throw new Exception((char*)"Index out of bounds!"); 
     }
 }
