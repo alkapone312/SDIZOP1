@@ -23,3 +23,8 @@ string FileReader::getData() {
 bool FileReader::isData() {
     return !this->file.eof();
 }
+
+bool FileReader::fileExists(std::string fileName) {
+    ifstream f(fileName);
+    return f.good();
+}

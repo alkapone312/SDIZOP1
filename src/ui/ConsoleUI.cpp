@@ -34,6 +34,10 @@ void ConsoleUI::error(string errorMessage) {
     cout << "\u001b[41;1mERROR:\u001b[0m " << errorMessage << endl;
 }
 
+void ConsoleUI::message(string message) {
+    cout << "\u001b[42mMessage:\u001b[0m " << message << endl;
+}
+
 int ConsoleUI::stringToNumber(string potentialNumber) {
     try {
         return stoi(potentialNumber);

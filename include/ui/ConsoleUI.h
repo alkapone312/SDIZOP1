@@ -12,6 +12,7 @@ namespace SDIZO {
             void menu(std::string* options);
             void info(std::string messsage);
             void error(std::string errorMessage);
+            void message(std::string message);
             void wait();
 
         private:

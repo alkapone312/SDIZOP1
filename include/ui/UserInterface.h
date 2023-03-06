@@ -15,6 +15,7 @@ namespace SDIZO {
         virtual void menu(std::string* options) = 0;
         virtual void info(std::string messsage) = 0;
         virtual void error(std::string errorMessage) = 0;
+        virtual void message(std::string errorMessage) = 0;
         virtual void wait() = 0;
     };
 }
