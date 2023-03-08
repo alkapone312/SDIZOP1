@@ -1,11 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include "file/FileReader.h"
+#include "exception/Exception.h"
 
 using namespace SDIZO;
 using namespace std;
 
 FileReader::FileReader(string fileName) {
+    if(!FileReader::fileExists(fileName)) {
+        throw new Exception((char*)"File does not exist");
+    }
     this->file.open(fileName);
 }
 
@@ -13,8 +17,8 @@ FileReader::~FileReader() {
     this->file.close();
 }
 
-string FileReader::getData() {
-    string data;
+int FileReader::getData() {
+    int data;
     this->file >> data;
 
     return data;
@@ -26,5 +30,7 @@ bool FileReader::isData() {
 
 bool FileReader::fileExists(std::string fileName) {
     ifstream f(fileName);
-    return f.good();
+    bool ok = f.good();
+    f.close();
+    return ok;
 }

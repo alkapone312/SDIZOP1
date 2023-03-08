@@ -28,5 +28,5 @@ namespace SDIZO {
              * @return int 
              */
             int getResult();
-    }   
+    };   
 }

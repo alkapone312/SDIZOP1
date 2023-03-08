@@ -2,6 +2,10 @@
 
 using namespace SDIZO;
 
+Timer::Timer() {}
+
+Timer::~Timer() {}
+
 void Timer::start() {
     this->startTime = clock();
 }
