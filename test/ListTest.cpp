@@ -4,6 +4,7 @@
 #include "exception/Exception.h"
 #include "ui/UserInterface.h"
 #include "file/FileReader.h"
+#include "utils/Timer.h"
 #include "Tests.h"
 
 using namespace std;
@@ -13,6 +14,7 @@ void _testPerformance();
 void _testInteractive();
 void _displayListFromFront(IntegerDoubleSidedList* list);
 void _displayListFromBack(IntegerDoubleSidedList* list);
+void _readData(string fileName, IntegerDoubleSidedList* list);
 UserInterface* ui;
 
 void testDoubleSidedList() {
@@ -43,36 +45,41 @@ void testDoubleSidedList() {
 void _testPerformance() {
     string options[] = {
         "What would you like to do:",
-        "1. Test appending to list from front."
+        "1. Test appending to list from front.",
+        "2. Exit."
     };
     ui->info("Performance tests are run from testfiles folder under testfiles/list/test{index}.txt. Each testfile will be run through the command that you would like to test. Please note that test file data should be integers separated by white spaces where first integer is the number of incoming data.");
     ui->wait();
+
     bool run = true;
+    IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+    Timer* t = new Timer();
     while(run) {
         ui->menu(options);
         switch(ui->getNumber()) {
+            case 1:
+                t->start();
+                _readData("testfiles/list/test0.txt", list);
+                t->stop();
+                ui->message("Elapsed time: " + to_string(t->getResult()));
             case 2:
                 run = false;
             break;
         }
-        run = false;
     }
 
 }
 
-void readData(string fileName, IntegerDoubleSidedList* list) {
-    int i = 0;
-    FileReader* reader = new FileReader(fileName);
-    reader->getData();
+void _readData(string fileName, IntegerDoubleSidedList* list) {    
     try {
-    while (reader->isData()) {
-        list->pushBack(stoi(reader->getData()));
-    }
+        FileReader* reader = new FileReader(fileName);
+        reader->getData();
+        while (reader->isData()) {
+            list->pushBack(reader->getData());
+        }
     } catch (...) {
         ui->error("Test file " + fileName + " is corrupted!");
     }
-    
-    i++;
 }
 
 void _testInteractive() {
