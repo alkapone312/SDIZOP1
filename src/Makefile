@@ -1,11 +1,10 @@
-SUBDIRS = list/ exception/ ui/ utils/
+CPP_FILES := $(wildcard **/*.cpp) $(wildcard *.cpp)
+OBJECT_FILES := $(patsubst %.cpp,%.o,$(CPP_FILES))
 
-all: deps archive
+all: $(OBJECT_FILES) archive
 
-deps: # run make file in each subdirectory
-	for dir in $(SUBDIRS); do \
-			$(MAKE) -C $$dir; \
-		done
+%.o: %.cpp
+	g++ -c $^ -I ../include
 
 archive: # creates library named SDIZO linking all objects together
 	find . -type f -name "*.o" | xargs ar rsc ../lib/libSDIZO.a
