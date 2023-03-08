@@ -112,6 +112,7 @@ namespace SDIZO {
              */
             virtual void setActual(int index);
         private:
+    
             /**
              * @brief Deletes connection between two nodes in given order.
              * 
