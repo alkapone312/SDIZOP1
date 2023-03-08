@@ -8,7 +8,7 @@ namespace SDIZO {
             FileReader(std::string fileName);
             ~FileReader();
             static bool fileExists(std::string fileName);
-            virtual std::string getData();
+            virtual int getData();
             virtual bool isData();
     };
 }
