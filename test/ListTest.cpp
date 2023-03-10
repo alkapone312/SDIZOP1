@@ -14,9 +14,16 @@ void _testPerformance();
 void _testInteractive();
 void _displayListFromFront(IntegerDoubleSidedList* list);
 void _displayListFromBack(IntegerDoubleSidedList* list);
+void _testAddingToListFromBack();
+void _testAddingToListFromFront();
+void _testDeletingFromListFromFront();
+void _testDeletingFromListFromBack();
 void _testSearchingInList();
 void _testAddingToList();
+void _readDataFront(string fileName, IntegerDoubleSidedList* list);
 void _readDataBack(string fileName, IntegerDoubleSidedList* list);
+void _popDataFront(IntegerDoubleSidedList* list);
+void _popDataBack(IntegerDoubleSidedList* list);
 UserInterface* ui;
 
 void testDoubleSidedList() {
@@ -52,8 +59,11 @@ void _testPerformance() {
     string options[] = {
         "What would you like to do:",
         "1. Test appending to list from front.",
-        "2. Test searching in list.",
-        "3. Exit."
+        "2. Test appending to list from back.",
+        "3. Test deleting from list from front.",
+        "4. Test deleting from list from back.",
+        "5. Test searching in list.",
+        "6. Exit."
     };
     ui->info("Performance tests are run from testfiles folder under testfiles/list/test{index}.txt. Each testfile will be run through the command that you would like to test. Please note that test file data should be integers separated by white spaces where first integer is the number of incoming data.");
     ui->wait();
@@ -63,12 +73,20 @@ void _testPerformance() {
         ui->menu(options);
         switch(ui->getNumber()) {
             case 1:
-                _testAddingToList();
+                _testAddingToListFromFront();
             break;
             case 2:
-                _testSearchingInList();
+                _testAddingToListFromBack();
             break;
             case 3:
+                _testDeletingFromListFromFront();
+            break;
+            case 4:
+                _testDeletingFromListFromBack();
+            break;
+            case 5:
+                _testSearchingInList();
+            case 6:
                 run = false;
             break;
         }
@@ -76,13 +94,57 @@ void _testPerformance() {
 
 }
 
-void _testAddingToList() {
+void _testAddingToListFromFront() {
+    int fileNumber = getNewFileIndex("list");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+        t->start();
+        _readDataFront(testFileName("list", i), list);
+        t->stop();
+        ui->info("Elapsed time: " + to_string(t->getResult()));
+        delete list;
+    }
+    delete t;
+}
+
+void _testAddingToListFromBack() {
     int fileNumber = getNewFileIndex("list");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
         t->start();
         _readDataBack(testFileName("list", i), list);
+        t->stop();
+        ui->info("Elapsed time: " + to_string(t->getResult()));
+        delete list;
+    }
+    delete t;
+}
+
+void _testDeletingFromListFromFront() {
+    int fileNumber = getNewFileIndex("list");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+        _readDataFront(testFileName("list", i), list);
+        t->start();
+        _popDataFront(list);
+        t->stop();
+        ui->info("Elapsed time: " + to_string(t->getResult()));
+        delete list;
+    }
+    delete t;
+}
+
+void _testDeletingFromListFromBack() {
+    int fileNumber = getNewFileIndex("list");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+        _readDataBack(testFileName("list", i), list);
+        t->start();
+        _popDataBack(list);
         t->stop();
         ui->info("Elapsed time: " + to_string(t->getResult()));
         delete list;
@@ -129,6 +191,27 @@ void _readDataFront(string fileName, IntegerDoubleSidedList* list) {
         ui->error("Test file " + fileName + " is corrupted!");
     }
 }
+
+void _popDataBack(IntegerDoubleSidedList* list) {  
+    try {  
+    list->setActual(0);
+    while(list->isItem()) {
+        list->popBack();
+        list->setActual(0);
+    }
+    } catch (Exception* e) {
+        ui->error(e->getMessage());
+    }
+}
+
+void _popDataFront(IntegerDoubleSidedList* list) {    
+    list->setActual(0);
+    while(list->isItem()) {
+        list->popFront();
+        list->setActual(0);
+    }
+}
+
 
 void _testInteractive() {
     string options[] = {
