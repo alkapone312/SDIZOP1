@@ -62,6 +62,14 @@ namespace SDIZO {
              * @return int 
              */
             virtual int remove(int index);
+            
+            /**
+             * @brief Adds an item to the specific index
+             * 
+             * @param index 
+             * @param value 
+             */
+            virtual void add(int index, int value);
 
             /**
              * @brief Get the length list.
