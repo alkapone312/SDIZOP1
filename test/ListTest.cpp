@@ -3,7 +3,7 @@
 #include "list/IntegerDoubleSidedList.h"
 #include "exception/Exception.h"
 #include "ui/UserInterface.h"
-#include "file/FileReader.h"
+#include "utils/FileReader.h"
 #include "utils/Timer.h"
 #include "Tests.h"
 
@@ -14,7 +14,9 @@ void _testPerformance();
 void _testInteractive();
 void _displayListFromFront(IntegerDoubleSidedList* list);
 void _displayListFromBack(IntegerDoubleSidedList* list);
-void _readData(string fileName, IntegerDoubleSidedList* list);
+void _testSearchingInList();
+void _testAddingToList();
+void _readDataBack(string fileName, IntegerDoubleSidedList* list);
 UserInterface* ui;
 
 void testDoubleSidedList() {
@@ -23,7 +25,8 @@ void testDoubleSidedList() {
         "What would you like to do:",
         "1. Performance test",
         "2. Interactive test",
-        "3. Exit"
+        "3. Generate test file",
+        "4. Exit"
     };
     bool run = true;
     while(run) {
@@ -36,6 +39,9 @@ void testDoubleSidedList() {
                 _testInteractive();
             break;
             case 3:
+                testFileGeneration("list");
+            break;
+            case 4:
                 run = false;
             break;
         }
@@ -46,23 +52,23 @@ void _testPerformance() {
     string options[] = {
         "What would you like to do:",
         "1. Test appending to list from front.",
-        "2. Exit."
+        "2. Test searching in list.",
+        "3. Exit."
     };
     ui->info("Performance tests are run from testfiles folder under testfiles/list/test{index}.txt. Each testfile will be run through the command that you would like to test. Please note that test file data should be integers separated by white spaces where first integer is the number of incoming data.");
     ui->wait();
 
     bool run = true;
-    IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
-    Timer* t = new Timer();
     while(run) {
         ui->menu(options);
         switch(ui->getNumber()) {
             case 1:
-                t->start();
-                _readData("testfiles/list/test0.txt", list);
-                t->stop();
-                ui->message("Elapsed time: " + to_string(t->getResult()));
+                _testAddingToList();
+            break;
             case 2:
+                _testSearchingInList();
+            break;
+            case 3:
                 run = false;
             break;
         }
@@ -70,12 +76,54 @@ void _testPerformance() {
 
 }
 
-void _readData(string fileName, IntegerDoubleSidedList* list) {    
+void _testAddingToList() {
+    int fileNumber = getNewFileIndex("list");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+        t->start();
+        _readDataBack(testFileName("list", i), list);
+        t->stop();
+        ui->info("Elapsed time: " + to_string(t->getResult()));
+        delete list;
+    }
+    delete t;
+}
+
+void _testSearchingInList() {
+    int fileNumber = getNewFileIndex("list");
+    Timer* t = new Timer();
+    ui->info("Please provide a number to find.");
+    int numberToFind = ui->getNumber();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
+        _readDataBack(testFileName("list", i), list);
+        t->start();
+        list->find(numberToFind);
+        t->stop();
+        ui->info("Elapsed time: " + to_string(t->getResult()));
+        delete list;
+    }
+}
+
+void _readDataBack(string fileName, IntegerDoubleSidedList* list) {    
     try {
         FileReader* reader = new FileReader(fileName);
-        reader->getData();
+        ui->info("File contains " + to_string(reader->getData()) + " numbers");
         while (reader->isData()) {
             list->pushBack(reader->getData());
+        }
+    } catch (...) {
+        ui->error("Test file " + fileName + " is corrupted!");
+    }
+}
+
+void _readDataFront(string fileName, IntegerDoubleSidedList* list) {    
+    try {
+        FileReader* reader = new FileReader(fileName);
+        ui->info("File contains " + to_string(reader->getData()) + " numbers");
+        while (reader->isData()) {
+            list->pushFront(reader->getData());
         }
     } catch (...) {
         ui->error("Test file " + fileName + " is corrupted!");
@@ -114,7 +162,7 @@ void _testInteractive() {
             break;
             case 3:
                 try {
-                    ui->message("Popped value: " + to_string(list->popFront()));
+                    ui->info("Popped value: " + to_string(list->popFront()));
                 } catch(Exception* e) {
                     ui->error(e->getMessage());
                 }
@@ -122,7 +170,7 @@ void _testInteractive() {
             break;
             case 4:
                 try {
-                    ui->message("Popped value: " + to_string(list->popBack()));
+                    ui->info("Popped value: " + to_string(list->popBack()));
                 } catch(Exception* e) {
                     ui->error(e->getMessage());
                 }
@@ -137,7 +185,7 @@ void _testInteractive() {
             case 7:
                 try {
                     buff = ui->getNumber();
-                    ui->message("Found index: " + to_string(list->get(buff))); 
+                    ui->info("Found index: " + to_string(list->get(buff))); 
                 } catch (Exception* e) {
                     ui->error(e->getMessage());
                 }
@@ -146,7 +194,7 @@ void _testInteractive() {
             case 8:
                 try {
                     buff = ui->getNumber();
-                    ui->message("Number under index: " + to_string(list->get(buff))); 
+                    ui->info("Number under index: " + to_string(list->get(buff))); 
                 } catch (Exception* e) {
                     ui->error(e->getMessage());
                 }
@@ -155,7 +203,7 @@ void _testInteractive() {
             case 9:
                 try {
                     buff = ui->getNumber();
-                    ui->message("Deleted number: " + to_string(list->remove(buff))); 
+                    ui->info("Deleted number: " + to_string(list->remove(buff))); 
                 } catch (Exception* e) {
                     ui->error(e->getMessage());
                 }
@@ -173,7 +221,7 @@ void _displayListFromFront(IntegerDoubleSidedList* list) {
     for(list->setActual(0); list->isItem(); list->next()) {
         sbuff += to_string(list->getActual()) + " ";
     }
-    ui->message("List: " + sbuff);
+    ui->info("List: " + sbuff);
     ui->wait();
 }
 
@@ -182,6 +230,6 @@ void _displayListFromBack(IntegerDoubleSidedList* list) {
     for(list->setActual(list->getLength()-1); list->isItem(); list->prev()) {
         sbuff += to_string(list->getActual()) + " ";
     }
-    ui->message("List backwards: " + sbuff);
+    ui->info("List backwards: " + sbuff);
     ui->wait();
 }

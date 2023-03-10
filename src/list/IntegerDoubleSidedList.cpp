@@ -5,7 +5,13 @@ using namespace SDIZO;
 
 IntegerDoubleSidedList::IntegerDoubleSidedList() {}
 
-IntegerDoubleSidedList::~IntegerDoubleSidedList() {}
+IntegerDoubleSidedList::~IntegerDoubleSidedList() {
+    while(this->head) {
+        IntegerDoubleSidedListNode* buff = this->head;
+        this->head = this->head->next;
+        delete buff;
+    }
+}
 
 void IntegerDoubleSidedList::pushFront(int value) {
     IntegerDoubleSidedListNode* newNode = new IntegerDoubleSidedListNode;

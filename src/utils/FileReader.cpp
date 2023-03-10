@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "file/FileReader.h"
+#include "utils/FileReader.h"
 #include "exception/Exception.h"
 
 using namespace SDIZO;
@@ -26,11 +26,4 @@ int FileReader::getData() {
 
 bool FileReader::isData() {
     return !this->file.eof();
-}
-
-bool FileReader::fileExists(std::string fileName) {
-    ifstream f(fileName);
-    bool ok = f.good();
-    f.close();
-    return ok;
 }

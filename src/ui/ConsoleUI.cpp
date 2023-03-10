@@ -10,7 +10,7 @@ ConsoleUI::~ConsoleUI() {}
 
 int ConsoleUI::getNumber() {
     string potentialNumber;
-    this->info("Please provide a number:");
+    this->message("Please provide a number:");
     cin >> potentialNumber;
 
     return this->stringToNumber(potentialNumber);
@@ -20,7 +20,7 @@ void ConsoleUI::menu(string* options) {
     try {
         int i = 0;
         while(true) {
-            this->info(options[i]);
+            this->message(options[i]);
             i++;
         }
     } catch (...) {}
