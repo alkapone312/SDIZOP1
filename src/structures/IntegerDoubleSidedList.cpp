@@ -1,4 +1,4 @@
-#include "list/IntegerDoubleSidedList.h"
+#include "structures/IntegerDoubleSidedList.h"
 #include "exception/Exception.h"
 
 using namespace SDIZO;

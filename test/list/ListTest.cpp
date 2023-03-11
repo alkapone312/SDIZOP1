@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "list/IntegerDoubleSidedList.h"
+#include "structures/IntegerDoubleSidedList.h"
 #include "exception/Exception.h"
 #include "ui/UserInterface.h"
 #include "utils/FileReader.h"
