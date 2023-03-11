@@ -89,11 +89,11 @@ int IntegerDoubleSidedList::remove(int index) {
     for(int i = 0 ; i < index; i++) {
         actual = actual->next;
     }
-    if(actual->prev != nullptr) {
-        actual->prev->next = actual->next;
+    if(actual->next) {
+        actual->next->prev = actual->prev ? actual->prev : nullptr;
     }
-    if(actual->next != nullptr) {
-        actual->next->prev = actual->prev;
+    if(actual->prev) {
+        actual->prev->next = actual->next ? actual->next : nullptr;
     }
     this->length--;
 

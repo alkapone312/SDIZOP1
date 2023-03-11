@@ -319,12 +319,8 @@ void _testInteractive() {
                 _displayListFromBack(list);
             break;
             case 7:
-                try {
-                    buff = ui->getNumber();
-                    ui->info("Found index: " + to_string(list->get(buff))); 
-                } catch (Exception* e) {
-                    ui->error(e->getMessage());
-                }
+                buff = ui->getNumber();
+                ui->info("Found index: " + to_string(list->find(buff))); 
                 _displayListFromFront(list);
             break;
             case 8:
