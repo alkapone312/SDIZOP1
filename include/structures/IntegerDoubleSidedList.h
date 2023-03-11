@@ -1,3 +1,5 @@
+#include "structures/Iterable.h"
+
 namespace SDIZO {
     struct IntegerDoubleSidedListNode {
         IntegerDoubleSidedListNode* prev = nullptr;
@@ -5,7 +7,7 @@ namespace SDIZO {
         int value;
     };
 
-    class IntegerDoubleSidedList {
+    class IntegerDoubleSidedList : public SDIZO::Iterable {
         private:
             IntegerDoubleSidedListNode* head;
             IntegerDoubleSidedListNode* tail;
@@ -20,14 +22,14 @@ namespace SDIZO {
              * 
              * @param value 
              */
-            virtual void pushBack(int value);
+            void pushBack(int value);
 
             /**
              * @brief Pushes value at the front of the list.
              * 
              * @param value 
              */
-            virtual void pushFront(int value);
+            void pushFront(int value);
 
             /**
              * @brief Pops value out of back of the list.
@@ -35,7 +37,7 @@ namespace SDIZO {
              * @throw SDIZO::Exception
              * @return int 
              */
-            virtual int popBack();
+            int popBack();
 
             /**
              * @brief Pops value out of front of the list.
@@ -43,7 +45,7 @@ namespace SDIZO {
              * @throw SDIZO::Exception
              * @return int 
              */
-            virtual int popFront();
+            int popFront();
 
             /**
              * @brief Gets value of list item at specified index
@@ -52,7 +54,7 @@ namespace SDIZO {
              * @param index 
              * @return int 
              */
-            virtual int get(int index);
+            int get(int index);
 
             /**
              * @brief Removes item with specified index
@@ -61,7 +63,7 @@ namespace SDIZO {
              * @param index 
              * @return int 
              */
-            virtual int remove(int index);
+            int remove(int index);
             
             /**
              * @brief Adds an item to the specific index
@@ -69,14 +71,14 @@ namespace SDIZO {
              * @param index 
              * @param value 
              */
-            virtual void add(int index, int value);
+            void add(int index, int value);
 
             /**
              * @brief Get the length list.
              * 
              * @return int 
              */
-            virtual int getLength();
+            int getLength();
 
             /**
              * @brief Finds an index of a value.
@@ -84,7 +86,7 @@ namespace SDIZO {
              * @param value 
              * @return int 
              */
-            virtual int find(int value);
+            int find(int value);
 
             /**
              * @brief Checks whether actual item is not null
@@ -92,33 +94,38 @@ namespace SDIZO {
              * @return true 
              * @return false 
              */
-            virtual bool isItem();
+            bool isItem();
 
             /**
              * @brief Changes actual pointer to next member.
              * 
              */
-            virtual void next();
+            void next();
 
             /**
              * @brief Changes actual pointer to previous member.
              * 
              */
-            virtual void prev();
+            void prev();
 
             /**
              * @brief Gets the actual list item
              * 
              * @return int
              */
-            virtual int getActual();
+            int getActual();
 
             /**
-             * @brief Sets the actual pointer to an index
-             * 
-             * @param index 
+             * @brief Sets iterator to start of an data structure
              */
-            virtual void setActual(int index);
+            void first();
+
+            /**
+             * @brief Sets iterator to end of an data structure
+             * 
+             */
+            void last();
+            
         private:
     
             /**
@@ -127,7 +134,7 @@ namespace SDIZO {
              * @param item1 
              * @param item2 
              */
-            virtual void deleteConnection(IntegerDoubleSidedListNode* item1, IntegerDoubleSidedListNode* item2);
+            void deleteConnection(IntegerDoubleSidedListNode* item1, IntegerDoubleSidedListNode* item2);
             
             /**
              * @brief Set the head and tail if list is empty. 
@@ -136,7 +143,7 @@ namespace SDIZO {
              * @return true 
              * @return false 
              */
-            virtual bool setIfEmpty(IntegerDoubleSidedListNode* node);
+            bool setIfEmpty(IntegerDoubleSidedListNode* node);
 
             /**
              * @brief Get the value and free object memory.
@@ -144,7 +151,7 @@ namespace SDIZO {
              * @param node 
              * @return int 
              */
-            virtual int getValueAndDelete(IntegerDoubleSidedListNode* node);
+            int getValueAndDelete(IntegerDoubleSidedListNode* node);
 
             /**
              * @brief Throws SDIZO::Exception if index is out of bounds.
@@ -152,6 +159,6 @@ namespace SDIZO {
              * @throw SDIZO::Exception
              * @param index 
              */
-            virtual void checkIndex(int index);
+            void checkIndex(int index);
     };
 }

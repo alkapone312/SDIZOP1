@@ -162,12 +162,14 @@ int IntegerDoubleSidedList::getActual() {
     return this->actual->value;
 }
 
-void IntegerDoubleSidedList::setActual(int index) {
+void IntegerDoubleSidedList::first() {
     this->actual = this->head;
-    for(int i = 0 ; i < index; i++) {
-        this->actual = this->actual->next;
-    }
 }
+
+void IntegerDoubleSidedList::last() {
+    this->actual = this->tail;
+}
+
 
 int IntegerDoubleSidedList::getValueAndDelete(IntegerDoubleSidedListNode* node) {
     int value = node->value;
