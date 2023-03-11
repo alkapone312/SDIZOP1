@@ -9,8 +9,8 @@ namespace SDIZO {
 
     class IntegerDoubleSidedList : public SDIZO::Iterable {
         private:
-            IntegerDoubleSidedListNode* head;
-            IntegerDoubleSidedListNode* tail;
+            IntegerDoubleSidedListNode* head = nullptr;
+            IntegerDoubleSidedListNode* tail = nullptr;
             IntegerDoubleSidedListNode* actual = head;
             int length = 0;
         public:
