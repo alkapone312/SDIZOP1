@@ -247,10 +247,10 @@ int _readDataFront(string fileName, IntegerDoubleSidedList* list) {
 
 void _popDataBack(IntegerDoubleSidedList* list) {  
     try {  
-    list->setActual(0);
+    list->first();
     while(list->isItem()) {
         list->popBack();
-        list->setActual(0);
+        list->first();
     }
     } catch (Exception* e) {
         ui->error(e->getMessage());
@@ -258,10 +258,10 @@ void _popDataBack(IntegerDoubleSidedList* list) {
 }
 
 void _popDataFront(IntegerDoubleSidedList* list) {    
-    list->setActual(0);
+    list->first();
     while(list->isItem()) {
         list->popFront();
-        list->setActual(0);
+        list->first();
     }
 }
 
@@ -350,7 +350,7 @@ void _testInteractive() {
 
 void _displayListFromFront(IntegerDoubleSidedList* list) {
     string sbuff = "";
-    for(list->setActual(0); list->isItem(); list->next()) {
+    for(list->first(); list->isItem(); list->next()) {
         sbuff += to_string(list->getActual()) + " ";
     }
     ui->info("List: " + sbuff);
@@ -359,7 +359,7 @@ void _displayListFromFront(IntegerDoubleSidedList* list) {
 
 void _displayListFromBack(IntegerDoubleSidedList* list) {
     string sbuff = "";
-    for(list->setActual(list->getLength()-1); list->isItem(); list->prev()) {
+    for(list->last(); list->isItem(); list->prev()) {
         sbuff += to_string(list->getActual()) + " ";
     }
     ui->info("List backwards: " + sbuff);
