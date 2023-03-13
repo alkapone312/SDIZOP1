@@ -1,4 +1,3 @@
-#include "structures/Iterable.h"
 #include "structures/IntegerDynamicArray.h"
 
 using SDIZO::IntegerDynamicArray;
@@ -6,8 +5,12 @@ using SDIZO::IntegerDynamicArray;
 namespace SDIZO {
     class IntegerBinaryHeap : public Iterable {
         private:
-            IntegerDynamicArray heap;
+            IntegerDynamicArray* heap = new IntegerDynamicArray;
         public:
+            IntegerBinaryHeap();
+            
+            ~IntegerBinaryHeap();
+
             /**
              * @brief Push value at the end of heap
              * 
@@ -37,6 +40,13 @@ namespace SDIZO {
              * @return int 
              */
             int get(int index);
+
+            /**
+             * @brief Get the length of heap
+             * 
+             * @return int 
+             */
+            int getLength();
 
             /**
              * @brief Checks whether actual item is not null
@@ -88,5 +98,28 @@ namespace SDIZO {
              * 
              */
             void bubbleUp(int index);
+
+            /**
+             * @brief Get the index of left child -1 if don't exist
+             * 
+             * @param nodeIndex 
+             * @return int 
+             */
+            int leftChildIndex(int nodeIndex);
+
+            /**
+             * @brief Get the index of right child -1 if don't exist
+             * 
+             * @param nodeIndex 
+             * @return int 
+             */
+            int rightChildIndex(int nodeIndex);
+
+            /**
+             * @brief Get the index of node parent -1 if don't exist
+             * 
+             * @return int 
+             */
+            int parentIndex(int nodeIndex);
     };
 }
