@@ -1,3 +1,5 @@
+#pragma once
+#include "structures/Iterable.h"
 #include "structures/IntegerDynamicArray.h"
 
 using SDIZO::IntegerDynamicArray;

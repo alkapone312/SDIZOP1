@@ -1,3 +1,4 @@
+#pragma once
 #include "structures/Iterable.h"
 
 namespace SDIZO {

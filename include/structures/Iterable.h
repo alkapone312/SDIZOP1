@@ -1,3 +1,5 @@
+#pragma once
+
 namespace SDIZO {
     class Iterable {
         public:
