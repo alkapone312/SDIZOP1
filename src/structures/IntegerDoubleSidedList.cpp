@@ -86,6 +86,12 @@ int IntegerDoubleSidedList::get(int index) {
 int IntegerDoubleSidedList::remove(int index) {
     this->checkIndex(index);
     IntegerDoubleSidedListNode* actual = this->head;
+    if(index == 0) {
+        this->head = this->head->next;
+    }
+    if(index == this->length - 1) {
+        this->tail = this->tail->prev;
+    }
     for(int i = 0 ; i < index; i++) {
         actual = actual->next;
     }
@@ -141,7 +147,7 @@ int IntegerDoubleSidedList::find(int value) {
 }
 
 void IntegerDoubleSidedList::checkIndex(int index) {
-    if(index >= this->length || index < 0) {
+    if(index != 0 && index >= this->length || index < 0) {
         throw new Exception((char*)"Index out of bounds!"); 
     }
 }

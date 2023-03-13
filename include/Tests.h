@@ -1,4 +1,5 @@
 void testDoubleSidedList();
 void testFileGeneration(std::string testFor);
-std::string testFileName(std::string testFor, int number);
+void testDynamicArray();
 int getNewFileIndex(std::string testFor);
+std::string testFileName(std::string testFor, int number);
