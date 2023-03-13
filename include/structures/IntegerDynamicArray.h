@@ -70,6 +70,14 @@ namespace SDIZO {
             int get(int index);
 
             /**
+             * @brief Set value at specified index.
+             * 
+             * @param index 
+             * @param value 
+             */
+            void set(int index, int value);
+
+            /**
              * @brief Get the Length of array
              * 
              * @return int 

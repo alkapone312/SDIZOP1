@@ -85,6 +85,11 @@ int IntegerDynamicArray::get(int index) {
     return this->dynamicArray[index];
 }
 
+void IntegerDynamicArray::set(int index, int value) {
+    this->checkIndex(index);
+    this->dynamicArray[index] = value;
+}
+
 int IntegerDynamicArray::getLength() {
     return this->length;
 }
