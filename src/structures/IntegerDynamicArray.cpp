@@ -1,6 +1,5 @@
 #include "exception/Exception.h"
 #include "structures/IntegerDynamicArray.h"
-#include <iostream>
 
 using namespace SDIZO;
 using namespace std;
@@ -17,69 +16,47 @@ void IntegerDynamicArray::pushFront(int value) {
 }
 
 void IntegerDynamicArray::add(int index, int value) {
-    this->checkIndex(index);
+    if(index != this->length) {
+        this->checkIndex(index);
+    }
+    //new array
     int* buff = new int[this->length + 1];
     buff[index] = value;
+    //copy array
     for(int i = 0 ; i < index; i++) {
         buff[i] = this->dynamicArray[i];
     }
     for(int i = index; i < this->length; i++) {
         buff[i+1] = this->dynamicArray[i];
     }
+    //replace buffer with actual array
     delete this->dynamicArray;
     this->dynamicArray = buff;
     this->length++;
 }
 
 int IntegerDynamicArray::popBack() {
-    if(!this->dynamicArray) {
-        throw new Exception((char*)"Tried to popBack() out of empty array!");
-    }
-    this->length--;
-    int value = this->dynamicArray[this->length];
-    int* buff = new int[this->length];
-    for(int i = 0 ; i < this->length; i++) {
-        buff[i] = this->dynamicArray[i];
-    }
-    delete[] this->dynamicArray;
-    this->dynamicArray = buff;
-    if(!this->length) {
-        this->dynamicArray = nullptr;
-    }
-
-    return value;
+    return this->remove(this->length - 1);
 }
 
 int IntegerDynamicArray::popFront() {
-    if(!this->dynamicArray) {
-        throw new Exception((char*)"Tried to popFront() out of empty array!");
-    }
-    this->length--;
-    int value = this->dynamicArray[0];
-    int* buff = new int[this->length];
-    for(int i = 0; i < this->length; i++) {
-        buff[i] = this->dynamicArray[i+1];
-    }
-    delete[] this->dynamicArray;
-    this->dynamicArray = buff;
-    if(!this->length) {
-        this->dynamicArray = nullptr;
-    }
-
-    return value;
+    return this->remove(0);
 }
 
 int IntegerDynamicArray::remove(int index) {
     this->checkIndex(index);
+    //new smaller aray
     this->length--;
     int value = this->dynamicArray[index];
     int* buff = new int[this->length];
+    //copy array
     for(int i = 0; i < index; i++) {
         buff[i] = this->dynamicArray[i];
     }
-    for(int i = 0; i < this->length; i++) {
+    for(int i = index; i < this->length; i++) {
         buff[i] = this->dynamicArray[i+1];
     }
+    //replace actual with buffer
     delete[] this->dynamicArray;
     this->dynamicArray = buff;
     if(!this->length) {
@@ -134,7 +111,7 @@ void IntegerDynamicArray::last() {
 }
 
 void IntegerDynamicArray::checkIndex(int index) {
-    if(index != 0 && index > this->length || index < 0) {
+    if(index != 0 && index >= this->length || index < 0) {
         throw new Exception((char*)"Index out of bounds!"); 
     }
 }
