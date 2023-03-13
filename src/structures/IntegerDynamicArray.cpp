@@ -5,7 +5,10 @@ using namespace SDIZO;
 using namespace std;
 
 IntegerDynamicArray::IntegerDynamicArray() {}
-IntegerDynamicArray::~IntegerDynamicArray() {}
+
+IntegerDynamicArray::~IntegerDynamicArray() {
+    delete[] this->dynamicArray;
+}
 
 void IntegerDynamicArray::pushBack(int value) {
     this->add(this->length, value);
