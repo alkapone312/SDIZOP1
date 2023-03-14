@@ -10,8 +10,8 @@
 using namespace std;
 using namespace SDIZO;
 
-void _testPerformance();
-void _testInteractive();
+void _testArrayPerformance();
+void _testArrayInteractive();
 void _displayArrayFromFront(IntegerDynamicArray* array);
 void _displayArrayFromBack(IntegerDynamicArray* array);
 void _testAddingToArrayFromBack();
@@ -41,10 +41,10 @@ void testDynamicArray() {
         arrayUi->menu(options);
         switch(arrayUi->getNumber()) {
             case 1:
-                _testPerformance();
+                _testArrayPerformance();
             break;
             case 2:
-                _testInteractive();
+                _testArrayInteractive();
             break;
             case 3:
                 testFileGeneration("array");
@@ -56,7 +56,7 @@ void testDynamicArray() {
     }
 }
 
-void _testPerformance() {
+void _testArrayPerformance() {
     string options[] = {
         "What would you like to do:",
         "1. Test appending to array from front.",
@@ -266,7 +266,7 @@ void _popDataFront(IntegerDynamicArray* array) {
 }
 
 
-void _testInteractive() {
+void _testArrayInteractive() {
     string options[] = {
         "What would you like to do:",
         "1. Add to array from front.",
