@@ -7,7 +7,7 @@ IntegerBinaryHeap::~IntegerBinaryHeap() {}
 
 void IntegerBinaryHeap::push(int value) {
     this->heap->pushBack(value);
-    this->bubbleUp(this->heap->getLength());
+    this->bubbleUp(this->heap->getLength() - 1);
 }
 
 int IntegerBinaryHeap::pop() {
