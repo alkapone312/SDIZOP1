@@ -10,8 +10,34 @@ using namespace std;
 
 int main (int argc, char* argv[]) {   
     SDIZO::UserInterface::setInstance(new SDIZO::ConsoleUI());
-    testDoubleSidedList();
-    testDynamicArray();
+    SDIZO::UserInterface* ui = SDIZO::UserInterface::getInstance();
+    string options[] = {
+        "1. Test double sided array",
+        "2. Test dynamic array",
+        "3. Test heap",
+        "4. Exit"
+    };
+    bool run = true;
+    while (run) {
+        ui->menu(options);
+        switch (ui->getNumber()) {
+            case 1:
+                testDoubleSidedList();
+            break;
+            case 2:
+                testDynamicArray();
+            break;
+            case 3:
+                testMaxHeap();
+            break;
+            case 4:
+                run = false;
+            break;
+            
+            default:
+            break;
+        }
+    }
     
     return 0;
 } 
