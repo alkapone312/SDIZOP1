@@ -1,3 +1,4 @@
+#include "exception/Exception.h"
 #include "structures/IntegerBinaryHeap.h"
 
 using namespace SDIZO;
@@ -11,9 +12,16 @@ void IntegerBinaryHeap::push(int value) {
 }
 
 int IntegerBinaryHeap::pop() {
+    if(this->getLength() == 0) {
+        throw new Exception((char*)"Tried to pop() out of empty heap!");
+    }
     this->heap->first();
     int value = this->heap->getActual();
-    this->heap->set(0, this->heap->popBack());
+    if(this->getLength() != 1) {
+        this->heap->set(0, this->heap->popBack());
+    } else {
+        return this->heap->popBack();
+    }
     this->bubbleDown(0);
 
     return value;
@@ -58,29 +66,29 @@ void IntegerBinaryHeap::last() {
 void IntegerBinaryHeap::bubbleDown(int actualIndex) {
     int leftChildIndex = this->leftChildIndex(actualIndex);
     while(leftChildIndex != -1) {
-        int smallerChildIndex = leftChildIndex;
+        int biggerChildIndex = leftChildIndex;
         int rightChildIndex = this->rightChildIndex(actualIndex);
         if(
             rightChildIndex != -1 && 
-            this->heap->get(leftChildIndex) > this->heap->get(rightChildIndex) 
+            this->heap->get(leftChildIndex) < this->heap->get(rightChildIndex) 
         ) {
-            smallerChildIndex = rightChildIndex;
+            biggerChildIndex = rightChildIndex;
         }
-        int smallerChildValue = this->heap->get(smallerChildIndex);
+        int smallerChildValue = this->heap->get(biggerChildIndex);
         int actualValue = this->heap->get(actualIndex);
         if(smallerChildValue < actualValue) {
             break;
         }
-        this->heap->set(smallerChildIndex, actualValue);
+        this->heap->set(biggerChildIndex, actualValue);
         this->heap->set(actualIndex, smallerChildValue);
-        actualIndex = smallerChildIndex;
-        leftChildIndex = this->leftChildIndex(smallerChildIndex);
+        actualIndex = biggerChildIndex;
+        leftChildIndex = this->leftChildIndex(biggerChildIndex);
     }
 }
 
 void IntegerBinaryHeap::bubbleUp(int index) {
     int parent = this->parentIndex(index);
-    while(parent != -1 && this->heap->get(parent) > this->heap->get(index)) {
+    while(parent != -1 && this->heap->get(parent) < this->heap->get(index)) {
         int buff = this->heap->get(parent);
         this->heap->set(parent, this->heap->get(index));
         this->heap->set(index, buff);
