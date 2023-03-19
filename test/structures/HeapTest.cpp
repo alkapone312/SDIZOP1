@@ -2,6 +2,8 @@
 #include "exception/Exception.h"
 #include "structures/IntegerBinaryHeap.h"
 #include "ui/UserInterface.h"
+#include "utils/FileReader.h"
+#include "utils/Timer.h"
 #include "Tests.h"
 
 using namespace SDIZO;
@@ -9,6 +11,10 @@ using namespace std;
 
 void _drawHeap(IntegerBinaryHeap* heap);
 void _testHeapPerformance();
+void _testPushingToHeap();
+void _testPoppingFromHeap();
+void _testFindingInHeap();
+int _readHeapData(string fileName, IntegerBinaryHeap* heap);
 void _testHeapInteractive();
 
 UserInterface* heapUi;
@@ -43,7 +49,97 @@ void testMaxHeap() {
 }
 
 void _testHeapPerformance() {
+    string options[] = {
+        "What would you like to do:",
+        "1. Test adding to hip",
+        "2. Test popping from heap",
+        "3. Test finding in heap",
+        "4. Exit"
+    };
+    bool run = true;
+    IntegerBinaryHeap* heap = new IntegerBinaryHeap;
+    Timer* t = new Timer;
+    while(run) {
+        heapUi->menu(options);
+        switch (heapUi->getNumber()) {
+            case 1:
+                _testPushingToHeap();
+            break;
+            case 2:
+                _testPoppingFromHeap();
+            break;
+            case 3:
+                _testFindingInHeap();
+            break;
+            case 4:
+                run = false;
+            break;
+        }
+    }
+}
 
+void _testPushingToHeap() {
+    int fileNumber = getNewFileIndex("heap");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerBinaryHeap* heap = new IntegerBinaryHeap();
+        t->start();
+        _readHeapData(testFileName("heap", i), heap);
+        t->stop();
+        heapUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete heap;
+    }
+    delete t;
+}
+
+void _testPoppingFromHeap() {
+    int fileNumber = getNewFileIndex("heap");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerBinaryHeap* heap = new IntegerBinaryHeap();
+        _readHeapData(testFileName("heap", i), heap);
+        int length = heap->getLength();
+        t->start();
+        for(int i = 0 ; i < length; i++) {
+            heap->pop();
+        }
+        t->stop();
+        heapUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete heap;
+    }
+    delete t;
+}
+
+void _testFindingInHeap() {
+    int fileNumber = getNewFileIndex("heap");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerBinaryHeap* heap = new IntegerBinaryHeap();
+        _readHeapData(testFileName("heap", i), heap);
+        int length = heap->getLength();
+        t->start();
+            heap->find(-1);
+        t->stop();
+        heapUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete heap;
+    }
+    delete t;
+}
+
+int _readHeapData(string fileName, IntegerBinaryHeap* heap) {   
+    int fileLength; 
+    try {
+        FileReader* reader = new FileReader(fileName);
+        fileLength = reader->getData();
+        heapUi->info("File contains " + to_string(fileLength) + " numbers");
+        while (reader->isData()) {
+            heap->push(reader->getData());
+        }
+    } catch (...) {
+        heapUi->error("Test file " + fileName + " is corrupted!");
+    }
+
+    return fileLength;
 }
 
 void _testHeapInteractive() {
