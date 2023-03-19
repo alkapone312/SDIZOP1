@@ -15,7 +15,8 @@ int main (int argc, char* argv[]) {
         "1. Test double sided array",
         "2. Test dynamic array",
         "3. Test heap",
-        "4. Exit"
+        "4. Test binary search tree",
+        "5. Exit"
     };
     bool run = true;
     while (run) {
@@ -31,6 +32,9 @@ int main (int argc, char* argv[]) {
                 testMaxHeap();
             break;
             case 4:
+                testBinarySearchTree();
+            break;
+            case 5:
                 run = false;
             break;
             
