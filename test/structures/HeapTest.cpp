@@ -57,8 +57,6 @@ void _testHeapPerformance() {
         "4. Exit"
     };
     bool run = true;
-    IntegerBinaryHeap* heap = new IntegerBinaryHeap;
-    Timer* t = new Timer;
     while(run) {
         heapUi->menu(options);
         switch (heapUi->getNumber()) {
