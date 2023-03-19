@@ -1,3 +1,6 @@
+#include "exception/Exception.h"
+#include <functional>
+
 namespace SDIZO {
     struct IntegerBinarySearchTreeNode
     {
@@ -32,6 +35,7 @@ namespace SDIZO {
             /**
              * @brief Finds node with provided value
              * 
+             * @throws SDIZO::Exception
              * @return int 
              */
             IntegerBinarySearchTreeNode* find(int value);
@@ -63,15 +67,63 @@ namespace SDIZO {
              * @param func 
              * @param type 
              */
-            void forEach(void (*func)(int), int type = IntegerBinarySearchTree::INORDER);
+            void forEach(const std::function<void(int)>& func, int type = IntegerBinarySearchTree::INORDER);
 
         private:
-            void preOrder(void (*func)(int), IntegerBinarySearchTreeNode* node);
-            void inOrder(void (*func)(int), IntegerBinarySearchTreeNode* node);
-            void postOrder(void (*func)(int), IntegerBinarySearchTreeNode* node);
+            /**
+             * @brief Pre order iteration method
+             * 
+             * @param func 
+             * @param node 
+             */
+            void preOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node);
+
+            /**
+             * @brief In order iteration method
+             * 
+             * @param func 
+             * @param node 
+             */
+            void inOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node);
+
+            /**
+             * @brief Post order iteration method
+             * 
+             * @param func 
+             * @param node 
+             */
+            void postOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node);
+
+            /**
+             * @brief Get the Min Key object get the minimal node in subtree
+             * 
+             * @param node 
+             * @return IntegerBinarySearchTreeNode* 
+             */
             IntegerBinarySearchTreeNode* getMinKey(IntegerBinarySearchTreeNode* node);
+
+            /**
+             * @brief Get the Maximal node in the sub tree
+             * 
+             * @param node 
+             * @return IntegerBinarySearchTreeNode* 
+             */
             IntegerBinarySearchTreeNode* getMaxKey(IntegerBinarySearchTreeNode* node);
+
+            /**
+             * @brief Find node successor
+             * 
+             * @param node 
+             * @return IntegerBinarySearchTreeNode* 
+             */
             IntegerBinarySearchTreeNode* findSuccessor(IntegerBinarySearchTreeNode* node);
+
+            /**
+             * @brief Find node predecessor
+             * 
+             * @param node 
+             * @return IntegerBinarySearchTreeNode* 
+             */
             IntegerBinarySearchTreeNode* findPredecessor(IntegerBinarySearchTreeNode* node);
     };
 }

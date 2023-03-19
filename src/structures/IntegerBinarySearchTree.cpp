@@ -18,11 +18,11 @@ void IntegerBinarySearchTree::add(int value) {
         oneBehindActual = actual;
         if(actual->value < value) {
             actual = actual->right;
-            break;
+            continue;
         }
         if(actual->value > value) {
-            break;
             actual = actual->left;
+            continue;
         }
         if(actual->value == value)
             return;
@@ -31,12 +31,12 @@ void IntegerBinarySearchTree::add(int value) {
     // insert new node
     if(oneBehindActual->value < value) {
         oneBehindActual->right = newNode;
-        newNode->parent = oneBehindActual->right;
+        newNode->parent = oneBehindActual;
         return;
     }
     if(oneBehindActual->value > value) {
         oneBehindActual->left = newNode;
-        newNode->parent = oneBehindActual->left;
+        newNode->parent = oneBehindActual;
         return;
     }
     if(oneBehindActual->value == value)
@@ -46,43 +46,64 @@ void IntegerBinarySearchTree::add(int value) {
 IntegerBinarySearchTreeNode* IntegerBinarySearchTree::remove(IntegerBinarySearchTreeNode* node) {
     IntegerBinarySearchTreeNode* successor;
     IntegerBinarySearchTreeNode* successorsChild;
+    // if it is the leaf it dont need an successor
     if(node->left == nullptr || node->right == nullptr) {
         successor = node;
     } else {
         successor = findSuccessor(node);
     }
 
+    // get succesor child if any
+    successorsChild = successor->right;
     if(successor->left != nullptr) 
         successorsChild = successor->left;
-    else 
-        successorsChild = successor->right;
-    if(successorsChild != nullptr)
-        successor->parent = successorsChild->parent;
-    if(successorsChild->parent == nullptr)
-        this->root = successor;
-    else {
-        if(successorsChild == successorsChild->parent->left)
-            successorsChild->parent->left = successor;
-        else
-            successorsChild->parent->right = successor;
-    }
-    if(successorsChild != node)
-        node->value = successorsChild->value;
 
-    return successorsChild;
+    //make parent of the child parent of the successor
+    if(successorsChild != nullptr)
+        successorsChild->parent = successor->parent;
+
+    // swap with root if successor is root    
+    if(successor->parent == nullptr) {
+        delete this->root;
+        this->root = successorsChild;
+    }
+    else {
+        // swap and delete nodes
+        if(successor == successor->parent->left) {
+            delete successor->parent->left;
+            successor->parent->left = successorsChild;
+        }
+        else {
+            delete successor->parent->right;
+            successor->parent->right = successorsChild;
+        }
+    }
+
+    //copy old node value
+    if(successor != node)
+        node->value = successor->value;
+
+    return successor;
 }
 
 IntegerBinarySearchTreeNode* IntegerBinarySearchTree::find(int value) {
     IntegerBinarySearchTreeNode* actual = this->root;
     while(actual != nullptr && actual->value != value) {
-        if(actual->value < value)
+        if(actual->value < value) {
             actual = actual->right;
-        if(actual->value > value)
+            continue;
+        }
+        if(actual->value > value) {
             actual = actual->left;
+            continue;
+        }
         if(actual->value == value)
             break;
     }
 
+    if(actual == nullptr) {
+        throw new Exception((char*)"Value not found!");
+    }
 
     return actual;
 }
@@ -99,7 +120,7 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMax() {
     return this->getMaxKey(this->root);
 }
 
-void IntegerBinarySearchTree::forEach(void (*func)(int), int type) {
+void IntegerBinarySearchTree::forEach(const std::function<void(int)>& func, int type) {
     switch (type) {
     case IntegerBinarySearchTree::PREORDER:
         preOrder(func, this->root);
@@ -113,7 +134,7 @@ void IntegerBinarySearchTree::forEach(void (*func)(int), int type) {
     }
 }
 
-void IntegerBinarySearchTree::preOrder(void (*func)(int), IntegerBinarySearchTreeNode* node) {
+void IntegerBinarySearchTree::preOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node) {
     if(node == nullptr)
         return;
     func(node->value);
@@ -121,7 +142,7 @@ void IntegerBinarySearchTree::preOrder(void (*func)(int), IntegerBinarySearchTre
     preOrder(func, node->right);
 }
 
-void IntegerBinarySearchTree::inOrder(void (*func)(int), IntegerBinarySearchTreeNode* node) {
+void IntegerBinarySearchTree::inOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node) {
     if(node == nullptr)
         return;
     inOrder(func, node->left);
@@ -129,7 +150,7 @@ void IntegerBinarySearchTree::inOrder(void (*func)(int), IntegerBinarySearchTree
     inOrder(func, node->right);
 }
 
-void IntegerBinarySearchTree::postOrder(void (*func)(int), IntegerBinarySearchTreeNode* node) {
+void IntegerBinarySearchTree::postOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node) {
     if(node == nullptr)
         return;
     postOrder(func, node->left);
