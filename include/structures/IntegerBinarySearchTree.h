@@ -1,5 +1,3 @@
-#include "structures/Iterable.h"
-
 namespace SDIZO {
     struct IntegerBinarySearchTreeNode
     {
@@ -10,7 +8,7 @@ namespace SDIZO {
     };
     
 
-    class IntegerBinarySearchTree : public Iterable {
+    class IntegerBinarySearchTree {
         private: 
             IntegerBinarySearchTreeNode* root = nullptr;
 
@@ -37,6 +35,13 @@ namespace SDIZO {
              * @return int 
              */
             IntegerBinarySearchTreeNode* find(int value);
+
+            /**
+             * @brief Get the Root node
+             * 
+             * @return IntegerBinarySearchTreeNode* 
+             */
+            IntegerBinarySearchTreeNode* getRoot();
 
             /**
              * @brief Get the Min value in tree

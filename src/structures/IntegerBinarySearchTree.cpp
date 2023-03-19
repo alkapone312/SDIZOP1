@@ -8,28 +8,37 @@ void IntegerBinarySearchTree::add(int value) {
     newNode->value = value;
     if(this->root == nullptr) {
         this->root = newNode;
+        return;
     }
 
     // search for new node position
-    IntegerBinarySearchTreeNode* oneBehindActual = this->root;
+    IntegerBinarySearchTreeNode* oneBehindActual;
     IntegerBinarySearchTreeNode* actual = this->root;
     while (actual != nullptr) {
         oneBehindActual = actual;
-        if(actual->value < value)
+        if(actual->value < value) {
             actual = actual->right;
-        if(actual->value > value)
+            break;
+        }
+        if(actual->value > value) {
+            break;
             actual = actual->left;
+        }
         if(actual->value == value)
             return;
     }
 
     // insert new node
-    if(oneBehindActual->value < value)
+    if(oneBehindActual->value < value) {
         oneBehindActual->right = newNode;
         newNode->parent = oneBehindActual->right;
-    if(oneBehindActual->value > value)
+        return;
+    }
+    if(oneBehindActual->value > value) {
         oneBehindActual->left = newNode;
         newNode->parent = oneBehindActual->left;
+        return;
+    }
     if(oneBehindActual->value == value)
         return;
 }
@@ -78,28 +87,19 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::find(int value) {
     return actual;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMin() {
-    IntegerBinarySearchTreeNode* actual = this->root;
-    while(actual->left) {
-        actual = actual->left;
-    }
+IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getRoot() {
+    return this->root;
+}
 
-    return actual;
+IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMin() {
+    return this->getMinKey(this->root);
 }
 
 IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMax() {
-    IntegerBinarySearchTreeNode* actual = this->root;
-    while(actual->right) {
-        actual = actual->right;
-    }
-
-    return actual;
+    return this->getMaxKey(this->root);
 }
 
-void IntegerBinarySearchTree::forEach(
-    void (*func)(int), 
-    int type = IntegerBinarySearchTree::PREORDER
-) {
+void IntegerBinarySearchTree::forEach(void (*func)(int), int type) {
     switch (type) {
     case IntegerBinarySearchTree::PREORDER:
         preOrder(func, this->root);
@@ -160,4 +160,24 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::findPredecessor(IntegerBin
     } 
 
     return buff;
+}
+
+IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMinKey(IntegerBinarySearchTreeNode* node) {
+    IntegerBinarySearchTreeNode* buff;
+    while(node->left != nullptr) {
+        buff = node;
+        node = node->left;
+    }
+
+    return node;
+}
+
+IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMaxKey(IntegerBinarySearchTreeNode* node) {
+    IntegerBinarySearchTreeNode* buff;
+    while(node->right != nullptr) {
+        buff = node;
+        node = node->right;
+    }
+
+    return node;
 }
