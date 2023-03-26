@@ -5,7 +5,7 @@ using namespace SDIZO;
 
 void IntegerBinarySearchTree::add(int value) {
     //new node as root if empty
-    IntegerBinarySearchTreeNode* newNode = new IntegerBinarySearchTreeNode;
+    IntegerBinaryTreeNode* newNode = new IntegerBinaryTreeNode;
     newNode->value = value;
     newNode->count = 1;
     if(this->root == nullptr) {
@@ -14,8 +14,8 @@ void IntegerBinarySearchTree::add(int value) {
     }
 
     // search for new node position
-    IntegerBinarySearchTreeNode* oneBehindActual;
-    IntegerBinarySearchTreeNode* actual = this->root;
+    IntegerBinaryTreeNode* oneBehindActual;
+    IntegerBinaryTreeNode* actual = this->root;
     while (actual != nullptr) {
         oneBehindActual = actual;
         if(actual->value < value) {
@@ -44,9 +44,9 @@ void IntegerBinarySearchTree::add(int value) {
     }
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::remove(IntegerBinarySearchTreeNode* node) {
-    IntegerBinarySearchTreeNode* successor;
-    IntegerBinarySearchTreeNode* successorsChild;
+IntegerBinaryTreeNode* IntegerBinarySearchTree::remove(IntegerBinaryTreeNode* node) {
+    IntegerBinaryTreeNode* successor;
+    IntegerBinaryTreeNode* successorsChild;
 
     if(node->count > 1) {
         node->count--;
@@ -101,8 +101,8 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::remove(IntegerBinarySearch
     return successor;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::find(int value) {
-    IntegerBinarySearchTreeNode* actual = this->root;
+IntegerBinaryTreeNode* IntegerBinarySearchTree::find(int value) {
+    IntegerBinaryTreeNode* actual = this->root;
     while(actual != nullptr && actual->value != value) {
         if(actual->value < value) {
             actual = actual->right;
@@ -123,15 +123,15 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::find(int value) {
     return actual;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getRoot() {
+IntegerBinaryTreeNode* IntegerBinarySearchTree::getRoot() {
     return this->root;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMin() {
+IntegerBinaryTreeNode* IntegerBinarySearchTree::getMin() {
     return this->getMinKey(this->root);
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMax() {
+IntegerBinaryTreeNode* IntegerBinarySearchTree::getMax() {
     return this->getMaxKey(this->root);
 }
 
@@ -149,7 +149,7 @@ void IntegerBinarySearchTree::forEach(const std::function<void(int)>& func, int 
     }
 }
 
-void IntegerBinarySearchTree::preOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node) {
+void IntegerBinarySearchTree::preOrder(const std::function<void(int)>& func, IntegerBinaryTreeNode* node) {
     if(node == nullptr)
         return;
     func(node->value);
@@ -157,7 +157,7 @@ void IntegerBinarySearchTree::preOrder(const std::function<void(int)>& func, Int
     preOrder(func, node->right);
 }
 
-void IntegerBinarySearchTree::inOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node) {
+void IntegerBinarySearchTree::inOrder(const std::function<void(int)>& func, IntegerBinaryTreeNode* node) {
     if(node == nullptr)
         return;
     inOrder(func, node->left);
@@ -165,7 +165,7 @@ void IntegerBinarySearchTree::inOrder(const std::function<void(int)>& func, Inte
     inOrder(func, node->right);
 }
 
-void IntegerBinarySearchTree::postOrder(const std::function<void(int)>& func, IntegerBinarySearchTreeNode* node) {
+void IntegerBinarySearchTree::postOrder(const std::function<void(int)>& func, IntegerBinaryTreeNode* node) {
     if(node == nullptr)
         return;
     postOrder(func, node->left);
@@ -174,10 +174,10 @@ void IntegerBinarySearchTree::postOrder(const std::function<void(int)>& func, In
 }
 
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::findSuccessor(IntegerBinarySearchTreeNode* node) {
+IntegerBinaryTreeNode* IntegerBinarySearchTree::findSuccessor(IntegerBinaryTreeNode* node) {
     if(node->right) 
         return getMinKey(node->right);
-    IntegerBinarySearchTreeNode* buff = node->parent;
+    IntegerBinaryTreeNode* buff = node->parent;
     while(buff != nullptr && buff->left != node) {
         node = buff;
         buff = buff->parent;
@@ -186,10 +186,10 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::findSuccessor(IntegerBinar
     return buff;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::findPredecessor(IntegerBinarySearchTreeNode* node) {
+IntegerBinaryTreeNode* IntegerBinarySearchTree::findPredecessor(IntegerBinaryTreeNode* node) {
     if(node->left) 
         return getMaxKey(node->left);
-    IntegerBinarySearchTreeNode* buff = node->parent;
+    IntegerBinaryTreeNode* buff = node->parent;
     while(buff != nullptr && buff->right != node) {
         node = buff;
         buff = buff->parent;
@@ -198,8 +198,8 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::findPredecessor(IntegerBin
     return buff;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMinKey(IntegerBinarySearchTreeNode* node) {
-    IntegerBinarySearchTreeNode* buff;
+IntegerBinaryTreeNode* IntegerBinarySearchTree::getMinKey(IntegerBinaryTreeNode* node) {
+    IntegerBinaryTreeNode* buff;
     while(node->left != nullptr) {
         buff = node;
         node = node->left;
@@ -208,8 +208,8 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMinKey(IntegerBinarySea
     return node;
 }
 
-IntegerBinarySearchTreeNode* IntegerBinarySearchTree::getMaxKey(IntegerBinarySearchTreeNode* node) {
-    IntegerBinarySearchTreeNode* buff;
+IntegerBinaryTreeNode* IntegerBinarySearchTree::getMaxKey(IntegerBinaryTreeNode* node) {
+    IntegerBinaryTreeNode* buff;
     while(node->right != nullptr) {
         buff = node;
         node = node->right;

@@ -1,11 +1,7 @@
-#include "structures/IntegerBinaryTreeNode.h"
-#include "exception/Exception.h"
-#include <functional>
-
-using SDIZO::IntegerBinaryTreeNode;
+#include "structures/IntegerBinarySearchTree.h"
 
 namespace SDIZO {
-    class IntegerBinarySearchTree {
+    class IntegerBlackRedTree : public SDIZO::IntegerBinarySearchTree {
         private: 
             IntegerBinaryTreeNode* root = nullptr;
 
@@ -61,7 +57,7 @@ namespace SDIZO {
              * @param func 
              * @param type 
              */
-            void forEach(const std::function<void(int)>& func, int type = IntegerBinarySearchTree::INORDER);
+            void forEach(const std::function<void(int)>& func, int type = IntegerBlackRedTree::INORDER);
 
         private:
             /**

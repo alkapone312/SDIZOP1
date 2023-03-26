@@ -1,6 +1,6 @@
 #include <iostream>
 #include "ui/UserInterface.h"
-#include "structures/IntegerBinarySearchTree.h"
+#include "structures/IntegerBlackRedTree.h"
 #include "utils/FileReader.h"
 #include "utils/Timer.h"
 #include "Tests.h"
@@ -8,19 +8,19 @@
 using namespace SDIZO;
 using namespace std;
 
-void _testBSTPerformance();
-void _testBSTInteractive();
-void _testAddingToBST();
-void _testDeletingFromBST();
-void _testFindingInBST();
-void _printBSTree(IntegerBinaryTreeNode* root, int space = 0);
+void _testRBTPerformance();
+void _testRBTInteractive();
+void _testAddingToRBT();
+void _testDeletingFromRBT();
+void _testFindingInRBT();
+void _printRBTree(IntegerBinaryTreeNode* root, int space = 0);
 void _printNodePath(IntegerBinaryTreeNode* node);
-int _readBSTData(string fileName, IntegerBinarySearchTree* bst);
+int _readRBTData(string fileName, IntegerBlackRedTree* RBT);
 
-UserInterface* bstUi;
+UserInterface* rbtUi;
 
-void testBinarySearchTree() {
-    bstUi = UserInterface::getInstance();
+void testBlackRedTree() {
+    rbtUi = UserInterface::getInstance();
     string options[] = {
         "What would you like to do:",
         "1. Performance test",
@@ -30,16 +30,16 @@ void testBinarySearchTree() {
     };
     bool run = true;
     while(run) {
-        bstUi->menu(options);
-        switch(bstUi->getNumber()) {
+        rbtUi->menu(options);
+        switch(rbtUi->getNumber()) {
             case 1:
-                _testBSTPerformance();
+                _testRBTPerformance();
             break;
             case 2:
-                _testBSTInteractive();
+                _testRBTInteractive();
             break;
             case 3:
-                testFileGeneration("bst");
+                testFileGeneration("rbt");
             break;
             case 4:
                 run = false;
@@ -48,7 +48,7 @@ void testBinarySearchTree() {
     }
 }
 
-void _testBSTPerformance() {
+void _testRBTPerformance() {
     string options[] = {
         "What would you like to do:",
         "1. Add to tree",
@@ -58,16 +58,16 @@ void _testBSTPerformance() {
     };
     bool run = true;
     while(run) {
-            bstUi->menu(options);
-            switch (bstUi->getNumber()) {
+            rbtUi->menu(options);
+            switch (rbtUi->getNumber()) {
             case 1:
-                _testAddingToBST();
+                _testAddingToRBT();
             break;
             case 2:
-                _testFindingInBST();
+                _testFindingInRBT();
             break;
             case 3:
-                _testDeletingFromBST();
+                _testDeletingFromRBT();
             break;
             case 4:
                 run = false;
@@ -76,54 +76,54 @@ void _testBSTPerformance() {
     }
 }
 
-void _testAddingToBST() {
-    int fileNumber = getNewFileIndex("bst");
+void _testAddingToRBT() {
+    int fileNumber = getNewFileIndex("rbt");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
-        IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
+        IntegerBlackRedTree* RBT = new IntegerBlackRedTree();
         t->start();
-        _readBSTData(testFileName("bst", i), bst);
+        _readRBTData(testFileName("rbt", i), RBT);
         t->stop();
-        bstUi->info("Elapsed time: " + to_string(t->getResult()));
-        delete bst;
+        rbtUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete RBT;
     }
     delete t;
 }
 
-void _testDeletingFromBST() {
-    int fileNumber = getNewFileIndex("bst");
+void _testDeletingFromRBT() {
+    int fileNumber = getNewFileIndex("rbt");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
-        IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
-        int fileLength = _readBSTData(testFileName("bst", i), bst);
+        IntegerBlackRedTree* RBT = new IntegerBlackRedTree();
+        int fileLength = _readRBTData(testFileName("rbt", i), RBT);
         t->start();
             for(int i = 0 ; i < fileLength; i++) {
-                bst->remove(bst->getRoot());
+                RBT->remove(RBT->getRoot());
             }
         t->stop();
-        bstUi->info("Elapsed time: " + to_string(t->getResult()));
-        delete bst;
+        rbtUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete RBT;
     }
     delete t;
 }
 
-void _testFindingInBST() {
-    int fileNumber = getNewFileIndex("bst");
+void _testFindingInRBT() {
+    int fileNumber = getNewFileIndex("rbt");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
-        IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
-        _readBSTData(testFileName("bst", i), bst);
-        int max = bst->getMax()->value;
+        IntegerBlackRedTree* RBT = new IntegerBlackRedTree();
+        _readRBTData(testFileName("rbt", i), RBT);
+        int max = RBT->getMax()->value;
         t->start();
-            bst->find(max);
+            RBT->find(max);
         t->stop();
-        bstUi->info("Elapsed time: " + to_string(t->getResult()));
-        delete bst;
+        rbtUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete RBT;
     }
     delete t;
 }
 
-void _testBSTInteractive() {
+void _testRBTInteractive() {
     string options[] = {
         "What would you like to do:",
         "1. Add to tree",
@@ -132,41 +132,41 @@ void _testBSTInteractive() {
         "4. Print tree",
         "5. Exit"
     };
-    IntegerBinarySearchTree* tree = new IntegerBinarySearchTree;
+    IntegerBlackRedTree* tree = new IntegerBlackRedTree;
     IntegerBinaryTreeNode* buff;
     string sbuff = "";
     bool run = true;
     while(run) {
-        bstUi->menu(options);
-        switch (bstUi->getNumber()) {
+        rbtUi->menu(options);
+        switch (rbtUi->getNumber()) {
         case 1:
-            tree->add(bstUi->getNumber());
-            _printBSTree(tree->getRoot());
+            tree->add(rbtUi->getNumber());
+            _printRBTree(tree->getRoot());
         break;
         case 2:
         try {
-            _printBSTree(tree->getRoot());
-            buff = tree->find(bstUi->getNumber());
-            bstUi->info("Found node: " + to_string(buff->value));
+            _printRBTree(tree->getRoot());
+            buff = tree->find(rbtUi->getNumber());
+            rbtUi->info("Found node: " + to_string(buff->value));
             _printNodePath(buff);
         } catch(Exception* e) {
-            bstUi->error(e->getMessage());
+            rbtUi->error(e->getMessage());
         }
         break;
         case 3:
         try {
-            _printBSTree(tree->getRoot());
-            buff = tree->find(bstUi->getNumber());
+            _printRBTree(tree->getRoot());
+            buff = tree->find(rbtUi->getNumber());
             buff = tree->remove(buff);
-            bstUi->info("Deleted node: " + to_string(buff->value));
+            rbtUi->info("Deleted node: " + to_string(buff->value));
             _printNodePath(buff);
-            _printBSTree(tree->getRoot());
+            _printRBTree(tree->getRoot());
         } catch(Exception* e) {
-            bstUi->error(e->getMessage());
+            rbtUi->error(e->getMessage());
         }
         break;
         case 4:
-            _printBSTree(tree->getRoot());
+            _printRBTree(tree->getRoot());
         break;
         case 5:
             run = false;
@@ -175,7 +175,7 @@ void _testBSTInteractive() {
     }
 }
 
-void _printBSTree(IntegerBinaryTreeNode* root, int space) {
+void _printRBTree(IntegerBinaryTreeNode* root, int space) {
     const int COUNT = 10;
     if (root == nullptr)
         return;
@@ -184,7 +184,7 @@ void _printBSTree(IntegerBinaryTreeNode* root, int space) {
     space += COUNT;
  
     // Process right child first
-    _printBSTree(root->right, space);
+    _printRBTree(root->right, space);
  
     // Print current node after space
     // count
@@ -192,12 +192,12 @@ void _printBSTree(IntegerBinaryTreeNode* root, int space) {
     for (int i = COUNT; i < space; i++)
         sbuff += " ";
     sbuff += to_string(root->value);
-    bstUi->info("");
-    bstUi->info(sbuff);
-    bstUi->info("");
+    rbtUi->info("");
+    rbtUi->info(sbuff);
+    rbtUi->info("");
  
     // Process left child
-    _printBSTree(root->left, space);
+    _printRBTree(root->left, space);
 }
 
 void _printNodePath(IntegerBinaryTreeNode* node) {
@@ -207,20 +207,20 @@ void _printNodePath(IntegerBinaryTreeNode* node) {
         buff = to_string(node->value) + " " + buff;
         node = node->parent;
     }
-    bstUi->info("Path to node:" + buff);
+    rbtUi->info("Path to node:" + buff);
 }
 
-int _readBSTData(string fileName, IntegerBinarySearchTree* bst) {   
+int _readRBTData(string fileName, IntegerBlackRedTree* RBT) {   
     int fileLength; 
     try {
         FileReader* reader = new FileReader(fileName);
         fileLength = reader->getData();
-        bstUi->info("File contains " + to_string(fileLength) + " numbers");
+        rbtUi->info("File contains " + to_string(fileLength) + " numbers");
         while (reader->isData()) {
-            bst->add(reader->getData());
+            RBT->add(reader->getData());
         }
     } catch (...) {
-        bstUi->error("Test file " + fileName + " is corrupted!");
+        rbtUi->error("Test file " + fileName + " is corrupted!");
     }
 
     return fileLength;
