@@ -98,7 +98,7 @@ void _testDeletingFromRBT() {
         int fileLength = _readRBTData(testFileName("rbt", i), RBT);
         t->start();
             for(int i = 0 ; i < fileLength; i++) {
-                RBT->remove(RBT->getRoot());
+                RBT->remove((IntegerBlackRedTreeNode*)RBT->getRoot());
             }
         t->stop();
         rbtUi->info("Elapsed time: " + to_string(t->getResult()));
@@ -156,10 +156,8 @@ void _testRBTInteractive() {
         case 3:
         try {
             _printRBTree(tree->getRoot());
-            buff = tree->find(rbtUi->getNumber());
-            buff = tree->remove(buff);
-            rbtUi->info("Deleted node: " + to_string(buff->value));
-            _printRBTNodePath(buff);
+            buff = (IntegerBlackRedTreeNode*)tree->find(rbtUi->getNumber());
+            tree->remove((IntegerBlackRedTreeNode*)buff);
             _printRBTree(tree->getRoot());
         } catch(Exception* e) {
             rbtUi->error(e->getMessage());

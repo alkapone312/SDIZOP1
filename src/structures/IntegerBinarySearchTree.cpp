@@ -1,47 +1,14 @@
 #include "structures/IntegerBinarySearchTree.h"
-#include <iostream>
 
 using namespace SDIZO;
 
-void IntegerBinarySearchTree::add(int value) {
+IntegerBinaryTreeNode* IntegerBinarySearchTree::add(int value) {
     //new node as root if empty
     IntegerBinaryTreeNode* newNode = new IntegerBinaryTreeNode;
     newNode->value = value;
     newNode->count = 1;
-    if(this->root == nullptr) {
-        this->root = newNode;
-        return;
-    }
 
-    // search for new node position
-    IntegerBinaryTreeNode* oneBehindActual;
-    IntegerBinaryTreeNode* actual = this->root;
-    while (actual != nullptr) {
-        oneBehindActual = actual;
-        if(actual->value < value) {
-            actual = actual->right;
-            continue;
-        }
-        if(actual->value > value) {
-            actual = actual->left;
-            continue;
-        }
-        if(actual->value == value)
-            actual->count++;
-            return;
-    }
-
-    // insert new node
-    if(oneBehindActual->value < value) {
-        oneBehindActual->right = newNode;
-        newNode->parent = oneBehindActual;
-        return;
-    }
-    if(oneBehindActual->value > value) {
-        oneBehindActual->left = newNode;
-        newNode->parent = oneBehindActual;
-        return;
-    }
+    return this->add(newNode);
 }
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::remove(IntegerBinaryTreeNode* node) {
@@ -149,6 +116,86 @@ void IntegerBinarySearchTree::forEach(const std::function<void(int)>& func, int 
     }
 }
 
+void IntegerBinarySearchTree::rotateLeft(IntegerBinaryTreeNode* node) {
+    if(!node->right) {
+        return;
+    }
+
+    IntegerBinaryTreeNode* right = node->right;
+    node->right = right->left;
+    if(right->left != nullptr)
+        right->left->parent = node;
+    right->parent = node->parent;
+    if(node->parent == nullptr)
+        this->root = right;
+    else if(node == node->parent->left)
+        node->parent->left = right;
+    else
+        node->parent->right = right;
+    
+    right->left = node;
+    node->parent = right;
+}
+
+void IntegerBinarySearchTree::rotateRight(IntegerBinaryTreeNode* node) {
+    if(!node->left) {
+        return;
+    }
+
+    IntegerBinaryTreeNode* left = node->left;
+    node->left = left->right;
+    if(left->right != nullptr)
+        left->right->parent = node;
+    left->parent = node->parent;
+    if(node->parent == nullptr)
+        this->root = left;
+    else if(node == node->parent->right)
+        node->parent->right = left;
+    else
+        node->parent->left = left;
+    
+    left->right = node;
+    node->parent = left;
+}
+
+IntegerBinaryTreeNode* IntegerBinarySearchTree::add(IntegerBinaryTreeNode* node) {
+    if(this->root == nullptr) {
+            this->root = node;
+            return node;
+        }
+
+    // search for new node position
+    IntegerBinaryTreeNode* oneBehindActual;
+    IntegerBinaryTreeNode* actual = this->root;
+    while (actual != nullptr) {
+        oneBehindActual = actual;
+        if(actual->value < node->value) {
+            actual = actual->right;
+            continue;
+        }
+        if(actual->value > node->value) {
+            actual = actual->left;
+            continue;
+        }
+        if(actual->value == node->value)
+            actual->count++;
+            return actual;
+    }
+
+    // insert new node
+    if(oneBehindActual->value < node->value) {
+        oneBehindActual->right = node;
+        node->parent = oneBehindActual;
+    }
+    if(oneBehindActual->value > node->value) {
+        oneBehindActual->left = node;
+        node->parent = oneBehindActual;
+    }
+
+    return node;
+}
+
+
 void IntegerBinarySearchTree::preOrder(const std::function<void(int)>& func, IntegerBinaryTreeNode* node) {
     if(node == nullptr)
         return;
@@ -216,4 +263,18 @@ IntegerBinaryTreeNode* IntegerBinarySearchTree::getMaxKey(IntegerBinaryTreeNode*
     }
 
     return node;
+}
+
+void IntegerBinarySearchTree::transplant(IntegerBinaryTreeNode* node, IntegerBinaryTreeNode* child) {
+    if(!node->parent) {
+        this->root = child;
+    } else if(node == node->parent->left) {
+        node->parent->left = child;
+    } else {
+        node->parent->right = child;
+    }
+
+    if(child) {
+        child->parent = node->parent;
+    }
 }

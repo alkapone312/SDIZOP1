@@ -6,7 +6,7 @@ using SDIZO::IntegerBinaryTreeNode;
 
 namespace SDIZO {
     class IntegerBinarySearchTree {
-        private: 
+        protected: 
             IntegerBinaryTreeNode* root = nullptr;
 
         public:
@@ -17,7 +17,7 @@ namespace SDIZO {
              * 
              * @param value 
              */
-            void add(int value);
+            IntegerBinaryTreeNode* add(int value);
             
             /**
              * @brief Removes node from tree
@@ -63,7 +63,29 @@ namespace SDIZO {
              */
             void forEach(const std::function<void(int)>& func, int type = IntegerBinarySearchTree::INORDER);
 
+            /**
+             * @brief Rotate tree at node right
+             * 
+             * @param node 
+             */
+            void rotateRight(IntegerBinaryTreeNode* node);
+
+            /**
+             * @brief Rotate tree at node left
+             * 
+             * @param node 
+             */
+            void rotateLeft(IntegerBinaryTreeNode* node);
+
         protected:
+            /**
+             * @brief Add node
+             * 
+             * @param node 
+             * @return IntegerBinaryTreeNode* 
+             */
+            IntegerBinaryTreeNode* add(IntegerBinaryTreeNode* node);
+
             /**
              * @brief Pre order iteration method
              * 
@@ -119,5 +141,13 @@ namespace SDIZO {
              * @return IntegerBinaryTreeNode* 
              */
             IntegerBinaryTreeNode* findPredecessor(IntegerBinaryTreeNode* node);
+
+            /**
+             * @brief transplant
+             * 
+             * @param node 
+             * @param child 
+             */
+            void transplant(IntegerBinaryTreeNode* node, IntegerBinaryTreeNode* child);
     };
 }

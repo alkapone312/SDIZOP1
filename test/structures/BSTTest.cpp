@@ -129,8 +129,10 @@ void _testBSTInteractive() {
         "1. Add to tree",
         "2. Find element in tree",
         "3. Remove element from tree",
-        "4. Print tree",
-        "5. Exit"
+        "4. Rotate right",
+        "5. Rotate left",
+        "6. Print tree",
+        "7. Exit"
     };
     IntegerBinarySearchTree* tree = new IntegerBinarySearchTree;
     IntegerBinaryTreeNode* buff;
@@ -167,8 +169,20 @@ void _testBSTInteractive() {
         break;
         case 4:
             _printBSTree(tree->getRoot());
+            buff = tree->find(bstUi->getNumber());
+            tree->rotateRight(buff);
+            _printBSTree(tree->getRoot());
         break;
         case 5:
+            _printBSTree(tree->getRoot());
+            buff = tree->find(bstUi->getNumber());
+            tree->rotateLeft(buff);
+            _printBSTree(tree->getRoot());
+        break;
+        case 6:
+            _printBSTree(tree->getRoot());
+        break;
+        case 7:
             run = false;
         break;
         }
