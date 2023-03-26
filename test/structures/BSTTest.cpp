@@ -1,6 +1,8 @@
 #include <iostream>
 #include "ui/UserInterface.h"
 #include "structures/IntegerBinarySearchTree.h"
+#include "utils/FileReader.h"
+#include "utils/Timer.h"
 #include "Tests.h"
 
 using namespace SDIZO;
@@ -8,8 +10,12 @@ using namespace std;
 
 void _testBSTPerformance();
 void _testBSTInteractive();
+void _testAddingToBST();
+void _testDeletingFromBST();
+void _testFindingInBST();
 void _printBSTree(IntegerBinarySearchTreeNode* root, int space = 0);
 void _printNodePath(IntegerBinarySearchTreeNode* node);
+int _readBSTData(string fileName, IntegerBinarySearchTree* bst);
 
 UserInterface* bstUi;
 
@@ -43,7 +49,78 @@ void testBinarySearchTree() {
 }
 
 void _testBSTPerformance() {
+    string options[] = {
+        "What would you like to do:",
+        "1. Add to tree",
+        "2. Find element in tree",
+        "3. Remove element from tree",
+        "4. Exit"
+    };
+    bool run = true;
+    while(run) {
+            bstUi->menu(options);
+            switch (bstUi->getNumber()) {
+            case 1:
+                _testAddingToBST();
+            break;
+            case 2:
+                _testFindingInBST();
+            break;
+            case 3:
+                _testDeletingFromBST();
+            break;
+            case 4:
+                run = false;
+            break;
+        }
+    }
+}
 
+void _testAddingToBST() {
+    int fileNumber = getNewFileIndex("bst");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
+        t->start();
+        _readBSTData(testFileName("bst", i), bst);
+        t->stop();
+        bstUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete bst;
+    }
+    delete t;
+}
+
+void _testDeletingFromBST() {
+    int fileNumber = getNewFileIndex("bst");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
+        int fileLength = _readBSTData(testFileName("bst", i), bst);
+        t->start();
+            for(int i = 0 ; i < fileLength; i++) {
+                bst->remove(bst->getRoot());
+            }
+        t->stop();
+        bstUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete bst;
+    }
+    delete t;
+}
+
+void _testFindingInBST() {
+    int fileNumber = getNewFileIndex("bst");
+    Timer* t = new Timer();
+    for(int i = 0 ; i < fileNumber; i++) {
+        IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
+        _readBSTData(testFileName("bst", i), bst);
+        int max = bst->getMax()->value;
+        t->start();
+            bst->find(max);
+        t->stop();
+        bstUi->info("Elapsed time: " + to_string(t->getResult()));
+        delete bst;
+    }
+    delete t;
 }
 
 void _testBSTInteractive() {
@@ -131,4 +208,20 @@ void _printNodePath(IntegerBinarySearchTreeNode* node) {
         node = node->parent;
     }
     bstUi->info("Path to node:" + buff);
+}
+
+int _readBSTData(string fileName, IntegerBinarySearchTree* bst) {   
+    int fileLength; 
+    try {
+        FileReader* reader = new FileReader(fileName);
+        fileLength = reader->getData();
+        bstUi->info("File contains " + to_string(fileLength) + " numbers");
+        while (reader->isData()) {
+            bst->add(reader->getData());
+        }
+    } catch (...) {
+        bstUi->error("Test file " + fileName + " is corrupted!");
+    }
+
+    return fileLength;
 }
