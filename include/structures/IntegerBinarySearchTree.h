@@ -7,6 +7,7 @@ namespace SDIZO {
         IntegerBinarySearchTreeNode* left = nullptr;
         IntegerBinarySearchTreeNode* right = nullptr;
         IntegerBinarySearchTreeNode* parent = nullptr;
+        int count = 0;
         int value;
     };
     

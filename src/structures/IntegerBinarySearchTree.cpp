@@ -1,4 +1,5 @@
 #include "structures/IntegerBinarySearchTree.h"
+#include <iostream>
 
 using namespace SDIZO;
 
@@ -6,6 +7,7 @@ void IntegerBinarySearchTree::add(int value) {
     //new node as root if empty
     IntegerBinarySearchTreeNode* newNode = new IntegerBinarySearchTreeNode;
     newNode->value = value;
+    newNode->count = 1;
     if(this->root == nullptr) {
         this->root = newNode;
         return;
@@ -25,6 +27,7 @@ void IntegerBinarySearchTree::add(int value) {
             continue;
         }
         if(actual->value == value)
+            actual->count++;
             return;
     }
 
@@ -39,14 +42,24 @@ void IntegerBinarySearchTree::add(int value) {
         newNode->parent = oneBehindActual;
         return;
     }
-    if(oneBehindActual->value == value)
-        return;
 }
 
 IntegerBinarySearchTreeNode* IntegerBinarySearchTree::remove(IntegerBinarySearchTreeNode* node) {
     IntegerBinarySearchTreeNode* successor;
     IntegerBinarySearchTreeNode* successorsChild;
-    // if it is the leaf it dont need an successor
+
+    if(node->count > 1) {
+        node->count--;
+
+        return node;
+    }
+
+    // if tree is empty
+    if(this->root == nullptr) {
+        throw new Exception((char*)"Tried to remove out of empty tree!");
+    }
+
+    // find successor, itself if dont have children
     if(node->left == nullptr || node->right == nullptr) {
         successor = node;
     } else {
@@ -80,8 +93,10 @@ IntegerBinarySearchTreeNode* IntegerBinarySearchTree::remove(IntegerBinarySearch
     }
 
     //copy old node value
-    if(successor != node)
+    if(successor != node) {
         node->value = successor->value;
+        node->count = successor->count;
+    }
 
     return successor;
 }
