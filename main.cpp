@@ -16,7 +16,8 @@ int main (int argc, char* argv[]) {
         "2. Test dynamic array",
         "3. Test heap",
         "4. Test binary search tree",
-        "5. Exit"
+        "5. Test black red tree",
+        "6. Exit"
     };
     bool run = true;
     while (run) {
@@ -35,6 +36,9 @@ int main (int argc, char* argv[]) {
                 testBinarySearchTree();
             break;
             case 5:
+                testBlackRedTree();
+            break;
+            case 6:
                 run = false;
             break;
             

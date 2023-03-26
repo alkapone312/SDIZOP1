@@ -14,7 +14,7 @@ void _testAddingToRBT();
 void _testDeletingFromRBT();
 void _testFindingInRBT();
 void _printRBTree(IntegerBinaryTreeNode* root, int space = 0);
-void _printNodePath(IntegerBinaryTreeNode* node);
+void _printRBTNodePath(IntegerBinaryTreeNode* node);
 int _readRBTData(string fileName, IntegerBlackRedTree* RBT);
 
 UserInterface* rbtUi;
@@ -148,7 +148,7 @@ void _testRBTInteractive() {
             _printRBTree(tree->getRoot());
             buff = tree->find(rbtUi->getNumber());
             rbtUi->info("Found node: " + to_string(buff->value));
-            _printNodePath(buff);
+            _printRBTNodePath(buff);
         } catch(Exception* e) {
             rbtUi->error(e->getMessage());
         }
@@ -159,7 +159,7 @@ void _testRBTInteractive() {
             buff = tree->find(rbtUi->getNumber());
             buff = tree->remove(buff);
             rbtUi->info("Deleted node: " + to_string(buff->value));
-            _printNodePath(buff);
+            _printRBTNodePath(buff);
             _printRBTree(tree->getRoot());
         } catch(Exception* e) {
             rbtUi->error(e->getMessage());
@@ -200,7 +200,7 @@ void _printRBTree(IntegerBinaryTreeNode* root, int space) {
     _printRBTree(root->left, space);
 }
 
-void _printNodePath(IntegerBinaryTreeNode* node) {
+void _printRBTNodePath(IntegerBinaryTreeNode* node) {
     string buff = "";
     buff = "";
     while(node != nullptr) {

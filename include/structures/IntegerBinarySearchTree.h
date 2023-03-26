@@ -63,7 +63,7 @@ namespace SDIZO {
              */
             void forEach(const std::function<void(int)>& func, int type = IntegerBinarySearchTree::INORDER);
 
-        private:
+        protected:
             /**
              * @brief Pre order iteration method
              * 
