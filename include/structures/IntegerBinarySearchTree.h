@@ -12,6 +12,8 @@ namespace SDIZO {
         public:
             enum IterationTypes {PREORDER, INORDER, POSTORDER};
 
+            ~IntegerBinarySearchTree();
+
             /**
              * @brief Adds element to the BST
              * 

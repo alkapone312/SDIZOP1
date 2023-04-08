@@ -3,6 +3,7 @@
 #include "structures/IntegerBinaryHeap.h"
 #include "ui/UserInterface.h"
 #include "utils/FileReader.h"
+#include "utils/FileWriter.h"
 #include "utils/Timer.h"
 #include "Tests.h"
 
@@ -11,6 +12,7 @@ using namespace std;
 
 void _drawHeap(IntegerBinaryHeap* heap);
 void _testHeapPerformance();
+void _testHeapPerformanceAutomatic();
 void _testPushingToHeap();
 void _testPoppingFromHeap();
 void _testFindingInHeap();
@@ -25,8 +27,9 @@ void testMaxHeap() {
         "What would you like to do:",
         "1. Performance test",
         "2. Interactive test",
-        "3. Generate test file",
-        "4. Exit"
+        "3. Automatic performance test",
+        "4. Generate test file",
+        "5. Exit"
     };
     bool run = true;
     while(run) {
@@ -39,13 +42,34 @@ void testMaxHeap() {
                 _testHeapInteractive();
             break;
             case 3:
-                testFileGeneration("heap");
+                _testHeapPerformanceAutomatic();
             break;
             case 4:
+                testFileGeneration("heap");
+            break;
+            case 5:
                 run = false;
             break;
         }
     }
+}
+
+void _testHeapPerformanceAutomatic() {
+    int lengths[] = {10, 100, 500, 1000, 2000, 5000, 10000, 50000, 100000};
+    for(int h = 0 ; h < 10; h++) {
+        heapUi->info("Generating new test files...");
+        _deleteTestFiles("heap");
+        for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
+            _generateTestFile("heap", lengths[i]);
+        }
+        heapUi->info("Testing adding to heap.");
+        _testPushingToHeap();
+        heapUi->info("Testing deleting from heap.");
+        _testPoppingFromHeap();
+        heapUi->info("Testing finding in heap.");
+        _testFindingInHeap();
+    }
+    _deleteTestFiles("heap");
 }
 
 void _testHeapPerformance() {
@@ -81,10 +105,12 @@ void _testPushingToHeap() {
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerBinaryHeap* heap = new IntegerBinaryHeap();
-        t->start();
         _readHeapData(testFileName("heap", i), heap);
+        t->start();
+        heap->push(1);
         t->stop();
         heapUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete heap;
     }
     delete t;
@@ -98,11 +124,10 @@ void _testPoppingFromHeap() {
         _readHeapData(testFileName("heap", i), heap);
         int length = heap->getLength();
         t->start();
-        for(int i = 0 ; i < length; i++) {
             heap->pop();
-        }
         t->stop();
         heapUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete heap;
     }
     delete t;
@@ -119,6 +144,7 @@ void _testFindingInHeap() {
             heap->find(-1);
         t->stop();
         heapUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete heap;
     }
     delete t;

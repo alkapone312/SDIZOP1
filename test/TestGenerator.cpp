@@ -33,6 +33,13 @@ void _generateTestFile(string testFor, int length) {
     delete writer;
 }
 
+void _deleteTestFiles(string testFor) {
+    int index = getNewFileIndex(testFor);
+    for(int i = 0 ; i < index; i++) {
+        std::remove(testFileName(testFor, i).c_str());
+    }
+}
+
 void testFileGeneration(string testFor) {
     UserInterface* ui;
     ui = UserInterface::getInstance();

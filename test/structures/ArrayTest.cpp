@@ -3,6 +3,7 @@
 #include "structures/IntegerDynamicArray.h"
 #include "exception/Exception.h"
 #include "ui/UserInterface.h"
+#include "utils/FileWriter.h"
 #include "utils/FileReader.h"
 #include "utils/Timer.h"
 #include "Tests.h"
@@ -12,6 +13,7 @@ using namespace SDIZO;
 
 void _testArrayPerformance();
 void _testArrayInteractive();
+void _testArrayPerformanceAutomatic();
 void _displayArrayFromFront(IntegerDynamicArray* array);
 void _displayArrayFromBack(IntegerDynamicArray* array);
 void _testAddingToArrayFromBack();
@@ -20,7 +22,7 @@ void _testDeletingFromArrayFromFront();
 void _testDeletingFromArrayFromBack();
 void _testSearchingInArray();
 void _testAddingToArrayAtIndex();
-void _testFromArrayAtIndex();
+void _testDeletingFromArrayAtIndex();
 int _readDataFront(string fileName, IntegerDynamicArray* Array);
 int _readDataBack(string fileName, IntegerDynamicArray* Array);
 void _popDataFront(IntegerDynamicArray* array);
@@ -33,8 +35,9 @@ void testDynamicArray() {
         "What would you like to do:",
         "1. Performance test",
         "2. Interactive test",
-        "3. Generate test file",
-        "4. Exit"
+        "3. Automatic performance test",
+        "4. Generate test file",
+        "5. Exit"
     };
     bool run = true;
     while(run) {
@@ -47,13 +50,41 @@ void testDynamicArray() {
                 _testArrayInteractive();
             break;
             case 3:
-                testFileGeneration("array");
+                _testArrayPerformanceAutomatic();
             break;
             case 4:
+                testFileGeneration("array");
+            break;
+            case 5:
                 run = false;
             break;
         }
     }
+}
+
+void _testArrayPerformanceAutomatic() {
+    int lengths[] = {10, 100, 500, 1000, 2000, 5000, 10000, 50000, 100000};
+    for(int h = 0 ; h < 10; h++) {
+        arrayUi->info("Generating new test files.");
+        _deleteTestFiles("array");
+        for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
+            _generateTestFile("array", lengths[i]);
+        }
+        _testAddingToArrayFromFront();
+        arrayUi->info("Testing adding to array at front.");
+        _testAddingToArrayFromBack();
+        arrayUi->info("Testing adding to array at back.");
+        _testAddingToArrayAtIndex();
+        arrayUi->info("Testing adding to array at the middle.");
+        _testDeletingFromArrayFromFront();
+        arrayUi->info("Testing deleting from array from front.");
+        _testDeletingFromArrayFromBack();
+        arrayUi->info("Testing deleting from array from back.");
+        _testDeletingFromArrayAtIndex();
+        arrayUi->info("Testing deleting from array from middle.");
+        _testSearchingInArray();
+    }
+    _deleteTestFiles("array");
 }
 
 void _testArrayPerformance() {
@@ -61,10 +92,10 @@ void _testArrayPerformance() {
         "What would you like to do:",
         "1. Test appending to array from front.",
         "2. Test appending to array from back.",
-        "3. Test deleting from array from front.",
-        "4. Test deleting from array from back.",
-        "5. Test adding to array at index.",
-        "6. Test deleting from array at index.",
+        "3. Test appending to array from middle.",
+        "4. Test deleting from array from front.",
+        "5. Test deleting from array from back.",
+        "6. Test deleting from array from middle.",
         "7. Test searching in array.",
         "8. Exit."
     };
@@ -82,16 +113,16 @@ void _testArrayPerformance() {
                 _testAddingToArrayFromBack();
             break;
             case 3:
-                _testDeletingFromArrayFromFront();
-            break;
-            case 4:
-                _testDeletingFromArrayFromBack();
-            break;
-            case 5:
                 _testAddingToArrayAtIndex();
             break;
+            case 4:
+                _testDeletingFromArrayFromFront();
+            break;
+            case 5:
+                _testDeletingFromArrayFromBack();
+            break;
             case 6:
-                _testFromArrayAtIndex();
+                _testDeletingFromArrayAtIndex();
             break;
             case 7:
                 _testSearchingInArray();
@@ -108,10 +139,12 @@ void _testAddingToArrayFromFront() {
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDynamicArray* array = new IntegerDynamicArray();
-        t->start();
         _readDataFront(testFileName("array", i), array);
+        t->start();
+        array->pushFront(1);
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
     delete t;
@@ -122,10 +155,12 @@ void _testAddingToArrayFromBack() {
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDynamicArray* array = new IntegerDynamicArray();
-        t->start();
         _readDataBack(testFileName("array", i), array);
+        t->start();
+        array->pushBack(1);
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
     delete t;
@@ -138,24 +173,26 @@ void _testDeletingFromArrayFromFront() {
         IntegerDynamicArray* array = new IntegerDynamicArray();
         _readDataFront(testFileName("array", i), array);
         t->start();
-        _popDataFront(array);
+        array->popFront();
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
     delete t;
 }
 
 void _testDeletingFromArrayFromBack() {
-    int fileNumber = getNewFileIndex("Array");
+    int fileNumber = getNewFileIndex("array");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDynamicArray* array = new IntegerDynamicArray();
-        _readDataBack(testFileName("Array", i), array);
+        _readDataBack(testFileName("array", i), array);
         t->start();
-        _popDataBack(array);
+        array->popBack();
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
     delete t;
@@ -164,35 +201,31 @@ void _testDeletingFromArrayFromBack() {
 void _testAddingToArrayAtIndex() {
     int fileNumber = getNewFileIndex("array");
     Timer* t = new Timer();
-    arrayUi->info("Please provide a index to add a value.");
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDynamicArray* array = new IntegerDynamicArray();
         int size = _readDataBack(testFileName("array", i), array);
-        arrayUi->info("Please provide a value below " + to_string(size));
-        int index = arrayUi->getNumber();
-        index = index < size ? index : size-1;
+        arrayUi->info("Adding to index at: " + to_string(size/2));
         t->start();
-        array->add(index, 0);
+        array->add(size/2, 0);
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
 }
 
-void _testFromArrayAtIndex() {
+void _testDeletingFromArrayAtIndex() {
     int fileNumber = getNewFileIndex("array");
     Timer* t = new Timer();
-    arrayUi->info("Please provide an index to delete.");
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDynamicArray* array = new IntegerDynamicArray();
         int size = _readDataBack(testFileName("array", i), array);
-        arrayUi->info("Please provide a value below " + to_string(size));
-        int numberToDelete = arrayUi->getNumber();
-        numberToDelete = numberToDelete < size ? numberToDelete : size-1;
+        arrayUi->info("Deleting from index: " + to_string(size/2));
         t->start();
-        array->remove(numberToDelete);
+        array->remove(size/2);
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
 }
@@ -200,15 +233,14 @@ void _testFromArrayAtIndex() {
 void _testSearchingInArray() {
     int fileNumber = getNewFileIndex("array");
     Timer* t = new Timer();
-    arrayUi->info("Please provide a number to find.");
-    int numberToFind = arrayUi->getNumber();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDynamicArray* array = new IntegerDynamicArray();
         _readDataBack(testFileName("array", i), array);
         t->start();
-        array->find(numberToFind);
+        array->find(-1);
         t->stop();
         arrayUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete array;
     }
 }

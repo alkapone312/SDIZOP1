@@ -4,6 +4,7 @@
 #include "exception/Exception.h"
 #include "ui/UserInterface.h"
 #include "utils/FileReader.h"
+#include "utils/FileWriter.h"
 #include "utils/Timer.h"
 #include "Tests.h"
 
@@ -12,6 +13,7 @@ using namespace SDIZO;
 
 void _testListPerformance();
 void _testListInteractive();
+void _testListPerformanceAutomatic();
 void _displayListFromFront(IntegerDoubleSidedList* list);
 void _displayListFromBack(IntegerDoubleSidedList* list);
 void _testAddingToListFromBack();
@@ -20,11 +22,9 @@ void _testDeletingFromListFromFront();
 void _testDeletingFromListFromBack();
 void _testSearchingInList();
 void _testAddingToListAtIndex();
-void _testFromListAtIndex();
+void _testDeletingFromListAtIndex();
 int _readListDataFront(string fileName, IntegerDoubleSidedList* list);
 int _readListDataBack(string fileName, IntegerDoubleSidedList* list);
-void _popListDataFront(IntegerDoubleSidedList* list);
-void _popListDataBack(IntegerDoubleSidedList* list);
 UserInterface* listUi;
 
 void testDoubleSidedList() {
@@ -33,8 +33,9 @@ void testDoubleSidedList() {
         "What would you like to do:",
         "1. Performance test",
         "2. Interactive test",
-        "3. Generate test file",
-        "4. Exit"
+        "3. Automatic performance test",
+        "4. Generate test file",
+        "5. Exit"
     };
     bool run = true;
     while(run) {
@@ -47,13 +48,41 @@ void testDoubleSidedList() {
                 _testListInteractive();
             break;
             case 3:
-                testFileGeneration("list");
+                _testListPerformanceAutomatic();
             break;
             case 4:
+                testFileGeneration("list");
+            break;
+            case 5:
                 run = false;
             break;
         }
     }
+}
+
+void _testListPerformanceAutomatic() {
+    int lengths[] = {10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000, 7000000, 8000000, 10000000};
+    for(int h = 0 ; h < 10; h++) {
+        listUi->info("Generating new test files...");
+        _deleteTestFiles("list");
+        for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
+            _generateTestFile("list", lengths[i]);
+        }
+        listUi->info("Testing adding to list from front");
+        _testAddingToListFromFront();
+        listUi->info("Testing adding to list from back");
+        _testAddingToListFromBack();
+        listUi->info("Testing adding to list at middle");
+        _testAddingToListAtIndex();
+        listUi->info("Testing deleting from list from front");
+        _testDeletingFromListFromFront();
+        listUi->info("Testing deleting from list from back");
+        _testDeletingFromListFromBack();
+        listUi->info("Testing deleting from list from middle");
+        _testDeletingFromListAtIndex();
+        listUi->info("Testing searching in list");
+    }
+    _deleteTestFiles("list");
 }
 
 void _testListPerformance() {
@@ -61,9 +90,9 @@ void _testListPerformance() {
         "What would you like to do:",
         "1. Test appending to list from front.",
         "2. Test appending to list from back.",
-        "3. Test deleting from list from front.",
-        "4. Test deleting from list from back.",
-        "5. Test adding to list at index.",
+        "3. Test appendig to list at index.",
+        "4. Test deleting from list from front.",
+        "5. Test deleting from list from back.",
         "6. Test deleting from list at index.",
         "7. Test searching in list.",
         "8. Exit."
@@ -82,16 +111,16 @@ void _testListPerformance() {
                 _testAddingToListFromBack();
             break;
             case 3:
-                _testDeletingFromListFromFront();
-            break;
-            case 4:
-                _testDeletingFromListFromBack();
-            break;
-            case 5:
                 _testAddingToListAtIndex();
             break;
+            case 4:
+                _testDeletingFromListFromFront();
+            break;
+            case 5:
+                _testDeletingFromListFromBack();
+            break;
             case 6:
-                _testFromListAtIndex();
+                _testDeletingFromListAtIndex();
             break;
             case 7:
                 _testSearchingInList();
@@ -100,7 +129,6 @@ void _testListPerformance() {
             break;
         }
     }
-
 }
 
 void _testAddingToListFromFront() {
@@ -108,10 +136,12 @@ void _testAddingToListFromFront() {
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
-        t->start();
         _readListDataFront(testFileName("list", i), list);
+        t->start();
+        list->pushFront(0);
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
     delete t;
@@ -122,10 +152,12 @@ void _testAddingToListFromBack() {
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
-        t->start();
         _readListDataBack(testFileName("list", i), list);
+        t->start();
+        list->pushBack(0);
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
     delete t;
@@ -138,9 +170,10 @@ void _testDeletingFromListFromFront() {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
         _readListDataFront(testFileName("list", i), list);
         t->start();
-        _popListDataFront(list);
+        list->popFront();
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
     delete t;
@@ -153,9 +186,10 @@ void _testDeletingFromListFromBack() {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
         _readListDataBack(testFileName("list", i), list);
         t->start();
-        _popListDataBack(list);
+        list->popBack();
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
     delete t;
@@ -164,35 +198,31 @@ void _testDeletingFromListFromBack() {
 void _testAddingToListAtIndex() {
     int fileNumber = getNewFileIndex("list");
     Timer* t = new Timer();
-    listUi->info("Please provide a index to add a value.");
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
         int size = _readListDataBack(testFileName("list", i), list);
-        listUi->info("Please provide a value below " + to_string(size));
-        int index = listUi->getNumber();
-        index = index < size ? index : size-1;
+        listUi->info("Adding to list at index:" + to_string(size/2));
         t->start();
-        list->add(index, 0);
+        list->add(size/2, 0);
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
 }
 
-void _testFromListAtIndex() {
+void _testDeletingFromListAtIndex() {
     int fileNumber = getNewFileIndex("list");
     Timer* t = new Timer();
-    listUi->info("Please provide an index to delete.");
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
         int size = _readListDataBack(testFileName("list", i), list);
-        listUi->info("Please provide a value below " + to_string(size));
-        int numberToDelete = listUi->getNumber();
-        numberToDelete = numberToDelete < size ? numberToDelete : size-1;
+        listUi->info("Deleting from list at index:" + to_string(size/2));
         t->start();
-        list->remove(numberToDelete);
+        list->remove(size/2);
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
 }
@@ -201,14 +231,14 @@ void _testSearchingInList() {
     int fileNumber = getNewFileIndex("list");
     Timer* t = new Timer();
     listUi->info("Please provide a number to find.");
-    int numberToFind = listUi->getNumber();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerDoubleSidedList* list = new IntegerDoubleSidedList();
         _readListDataBack(testFileName("list", i), list);
         t->start();
-        list->find(numberToFind);
+        list->find(-1);
         t->stop();
         listUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete list;
     }
 }
@@ -244,27 +274,6 @@ int _readListDataFront(string fileName, IntegerDoubleSidedList* list) {
 
     return fileLength;
 }
-
-void _popListDataBack(IntegerDoubleSidedList* list) {  
-    try {  
-    list->first();
-    while(list->isItem()) {
-        list->popBack();
-        list->first();
-    }
-    } catch (Exception* e) {
-        listUi->error(e->getMessage());
-    }
-}
-
-void _popListDataFront(IntegerDoubleSidedList* list) {    
-    list->first();
-    while(list->isItem()) {
-        list->popFront();
-        list->first();
-    }
-}
-
 
 void _testListInteractive() {
     string options[] = {

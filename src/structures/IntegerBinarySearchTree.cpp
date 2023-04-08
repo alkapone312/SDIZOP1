@@ -2,6 +2,12 @@
 
 using namespace SDIZO;
 
+IntegerBinarySearchTree::~IntegerBinarySearchTree() {
+    while(this->root) {
+        this->remove(this->root);
+    }
+}
+
 IntegerBinaryTreeNode* IntegerBinarySearchTree::add(int value) {
     //new node as root if empty
     IntegerBinaryTreeNode* newNode = new IntegerBinaryTreeNode;

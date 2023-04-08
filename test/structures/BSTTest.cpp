@@ -2,6 +2,7 @@
 #include "ui/UserInterface.h"
 #include "structures/IntegerBinarySearchTree.h"
 #include "utils/FileReader.h"
+#include "utils/FileWriter.h"
 #include "utils/Timer.h"
 #include "Tests.h"
 
@@ -10,6 +11,7 @@ using namespace std;
 
 void _testBSTPerformance();
 void _testBSTInteractive();
+void _testBSTPerformanceAutomatic();
 void _testAddingToBST();
 void _testDeletingFromBST();
 void _testFindingInBST();
@@ -25,8 +27,9 @@ void testBinarySearchTree() {
         "What would you like to do:",
         "1. Performance test",
         "2. Interactive test",
-        "3. Generate test file",
-        "4. Exit"
+        "3. Automatic performance test",
+        "4. Generate test file",
+        "5. Exit"
     };
     bool run = true;
     while(run) {
@@ -39,16 +42,37 @@ void testBinarySearchTree() {
                 _testBSTInteractive();
             break;
             case 3:
-                testFileGeneration("bst");
+                _testBSTPerformanceAutomatic();
             break;
             case 4:
+                testFileGeneration("bst");
+            break;
+            case 5:
                 run = false;
             break;
         }
     }
 }
 
-void _testBSTPerformance() {
+void _testBSTPerformanceAutomatic() {
+    int lengths[] = {10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000, 7000000, 8000000, 10000000};
+    for(int h = 0 ; h < 1; h++) {
+        bstUi->info("Generating new test files...");
+        _deleteTestFiles("bst");
+        for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
+            _generateTestFile("bst", lengths[i]);
+        }
+        bstUi->info("Testing adding to BST");
+        _testAddingToBST();
+        bstUi->info("Testing deleting from BST");
+        _testDeletingFromBST();
+        bstUi->info("Testing finding in BST");
+        _testFindingInBST();
+    }
+    _deleteTestFiles("bst");
+}
+
+void _testBSTPerformance() {    
     string options[] = {
         "What would you like to do:",
         "1. Add to tree",
@@ -81,10 +105,12 @@ void _testAddingToBST() {
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
         IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
-        t->start();
         _readBSTData(testFileName("bst", i), bst);
+        t->start();
+        bst->add(bst->getMax()->value+1);
         t->stop();
         bstUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete bst;
     }
     delete t;
@@ -97,11 +123,10 @@ void _testDeletingFromBST() {
         IntegerBinarySearchTree* bst = new IntegerBinarySearchTree();
         int fileLength = _readBSTData(testFileName("bst", i), bst);
         t->start();
-            for(int i = 0 ; i < fileLength; i++) {
-                bst->remove(bst->getRoot());
-            }
+        bst->remove(bst->getRoot());
         t->stop();
         bstUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete bst;
     }
     delete t;
@@ -115,9 +140,10 @@ void _testFindingInBST() {
         _readBSTData(testFileName("bst", i), bst);
         int max = bst->getMax()->value;
         t->start();
-            bst->find(max);
+        bst->find(max);
         t->stop();
         bstUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete bst;
     }
     delete t;

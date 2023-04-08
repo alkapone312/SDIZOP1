@@ -9,7 +9,7 @@ deps: # executes makefile from src to build dependencies
 	$(MAKE) -C test/
 
 main: main.o # links object file with libraries and output executable
-	g++ -g main.o -L$(LIB_DIR) $(USE_LIBRARIES) -o bin/main
+	g++ main.o -L$(LIB_DIR) $(USE_LIBRARIES) -o bin/main
 
 main.o: main.cpp # compiles main.cpp with include and outputs object file
 	g++ -c main.cpp -I $(INCLUDE_DIR) -o main.o

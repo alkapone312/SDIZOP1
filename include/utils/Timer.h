@@ -1,11 +1,12 @@
 #pragma once
-#include <ctime>
+
+#include <chrono>
 
 namespace SDIZO {
     class Timer {
         private:
-            int startTime = 0;
-            int stopTime = 0;
+            std::chrono::high_resolution_clock::time_point startTime;
+            std::chrono::high_resolution_clock::time_point stopTime;
         public:
             Timer();
             ~Timer();

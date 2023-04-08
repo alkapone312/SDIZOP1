@@ -7,7 +7,10 @@ namespace SDIZO {
         private:
             std::ofstream file;
         public:
-            FileWriter(std::string filename);
+            enum Mode {
+                CREATE, APPEND
+            };
+            FileWriter(std::string filename, int mode = FileWriter::Mode::CREATE);
             ~FileWriter();
             virtual void write(std::string value);
     };

@@ -7,13 +7,14 @@ Timer::Timer() {}
 Timer::~Timer() {}
 
 void Timer::start() {
-    this->startTime = clock();
+    this->startTime = std::chrono::high_resolution_clock::now();
 }
 
 void Timer::stop() {
-    this->stopTime = clock();
+    this->stopTime = std::chrono::high_resolution_clock::now();
 }
 
 int Timer::getResult() {
-    return this->stopTime - this->startTime;
+    auto int_us = std::chrono::duration_cast<std::chrono::nanoseconds>(this->stopTime - this->startTime);
+    return int_us.count();
 }
