@@ -2,78 +2,142 @@
 
 using namespace SDIZO;
 
+IntegerBlackRedTree::~IntegerBlackRedTree() {
+    while (this->root) {
+        this->remove(this->getRoot());
+    }
+}
+
+void IntegerBlackRedTree::add(int key) {
+    IntegerBlackRedTreeNode* newNode = new IntegerBlackRedTreeNode;
+    newNode->value = key;
+    IntegerBinarySearchTree::add(newNode);
+    this->insertFix(newNode);
+}
+
 void IntegerBlackRedTree::remove(IntegerBlackRedTreeNode* node) {
     
 }
 
-void IntegerBlackRedTree::add(int value) {
-    	// Ordinary Binary Search Insertion
-		IntegerBlackRedTreeNode* newNode = new IntegerBlackRedTreeNode;
-        newNode->value = value;
-        newNode->count = 1;
-        newNode = (IntegerBlackRedTreeNode*)IntegerBinarySearchTree::add(newNode);
-
-		// if new node is a root node, simply return
-		if (newNode->parent == nullptr){
-			newNode->red = false;
-			return;
-		}
-
-		// if the grandparent is null, simply return
-		if (newNode->parent->parent == nullptr) {
-			return;
-		}
-
-		// Fix the tree
-		fixInsert(newNode);
+IntegerBlackRedTreeNode* IntegerBlackRedTree::getRoot() {
+    return (IntegerBlackRedTreeNode*) this->root;
 }
 
-// fix the red-black tree
-void IntegerBlackRedTree::fixInsert(IntegerBlackRedTreeNode* insertedNode){
-    while (insertedNode != root && ((IntegerBlackRedTreeNode*)insertedNode->parent)->red) {
-        if (insertedNode->parent == insertedNode->parent->parent->left) {
-            IntegerBlackRedTreeNode* uncle = (IntegerBlackRedTreeNode*)insertedNode->parent->parent->right;
-            if (uncle != nullptr && uncle->red) {
-                // Przypadek 1: wujek jest czerwony
-                ((IntegerBlackRedTreeNode*)insertedNode->parent)->red = false;
-                uncle->red = false;
-                ((IntegerBlackRedTreeNode*)insertedNode->parent->parent)->red = true;
-                insertedNode = (IntegerBlackRedTreeNode*)insertedNode->parent->parent;
+void IntegerBlackRedTree::deleteFix(IntegerBlackRedTreeNode* &node) {
+
+}
+
+void IntegerBlackRedTree::insertFix(IntegerBlackRedTreeNode* &newNode) {
+    //no parent => newNode is root
+    if(!hasParent(newNode)) {
+        newNode->color = BLACK;
+        return;
+    }
+
+    while(color(parent(newNode)) == RED) {
+        if(parent(newNode) == left(grandparent(newNode))) {
+            if(color(right(grandparent(newNode))) == RED) {
+                setColor(right(grandparent(newNode)), BLACK);
+                setColor(left(grandparent(newNode)), BLACK);
+                setColor(grandparent(newNode), RED);
+                newNode = grandparent(newNode);
+            } else if(newNode == right(parent(newNode))) {
+                newNode = parent(newNode);
+                rotateLeft(newNode);
             } else {
-                if (insertedNode == insertedNode->parent->right) {
-                    // Przypadek 2: nowy węzeł jest prawym dzieckiem
-                    insertedNode = (IntegerBlackRedTreeNode*)insertedNode->parent;
-                    this->rotateLeft(insertedNode);
-                }
-                // Przypadek 3: nowy węzeł jest lewym dzieckiem
-                ((IntegerBlackRedTreeNode*)insertedNode->parent)->red = false;
-                ((IntegerBlackRedTreeNode*)insertedNode->parent->parent)->red = true;
-                this->rotateRight(insertedNode->parent->parent);
+                setColor(parent(newNode), BLACK);
+                setColor(grandparent(newNode), RED);
+                rotateRight(grandparent(newNode));
             }
         } else {
-            IntegerBlackRedTreeNode* uncle = (IntegerBlackRedTreeNode*)insertedNode->parent->parent->left;
-            if (uncle != nullptr && uncle->red) {
-                // Przypadek 4: wujek jest czerwony
-                ((IntegerBlackRedTreeNode*)insertedNode->parent)->red = false;
-                uncle->red = false;
-                ((IntegerBlackRedTreeNode*)insertedNode->parent->parent)->red = true;
-                insertedNode = (IntegerBlackRedTreeNode*)insertedNode->parent->parent;
+            if(color(left(grandparent(newNode))) == RED) {
+                setColor(right(grandparent(newNode)), BLACK);
+                setColor(left(grandparent(newNode)), BLACK);
+                setColor(grandparent(newNode), RED);
+                newNode = grandparent(newNode);
+            } else if(newNode == left(parent(newNode))) {
+                newNode = parent(newNode);
+                rotateRight(newNode);
             } else {
-                if (insertedNode == insertedNode->parent->left) {
-                    // Przypadek 5: nowy węzeł jest lewym dzieckiem
-                    insertedNode = (IntegerBlackRedTreeNode*)insertedNode->parent;
-                    this->rotateRight(insertedNode);
-                }
-                // Przypadek 6: nowy węzeł jest prawym dzieckiem
-                ((IntegerBlackRedTreeNode*)insertedNode->parent)->red = false;
-                ((IntegerBlackRedTreeNode*)insertedNode->parent->parent)->red = true;
-                this->rotateLeft(insertedNode->parent->parent);
+                setColor(parent(newNode), BLACK);
+                setColor(grandparent(newNode), RED);
+                rotateLeft(grandparent(newNode));
             }
         }
+        setColor(this->getRoot(), BLACK);
     }
-    ((IntegerBlackRedTreeNode*)root)->red = false;
 }
 
-void IntegerBlackRedTree::fixDelete(IntegerBlackRedTreeNode* node) {
-    
+int IntegerBlackRedTree::color(IntegerBlackRedTreeNode* node) {
+    if(node == nullptr) {
+        return BLACK;
+    }
+
+    return node->color;
+}
+
+void IntegerBlackRedTree::setColor(IntegerBlackRedTreeNode* node, int color) {
+    if(node == nullptr) {
+        return;
+    }
+
+    node->color = color;
+}
+
+IntegerBlackRedTreeNode* IntegerBlackRedTree::left(IntegerBlackRedTreeNode* node) {
+    return (IntegerBlackRedTreeNode*) node->left;
+}
+
+IntegerBlackRedTreeNode* IntegerBlackRedTree::right(IntegerBlackRedTreeNode* node) {
+    return (IntegerBlackRedTreeNode*) node->right;
+}
+
+IntegerBlackRedTreeNode* IntegerBlackRedTree::parent(IntegerBlackRedTreeNode* node) {
+    return (IntegerBlackRedTreeNode*) node->parent;
+}
+
+IntegerBlackRedTreeNode* IntegerBlackRedTree::grandparent(IntegerBlackRedTreeNode* node) {
+    if(this->hasGrandparent(node)) {
+        return (IntegerBlackRedTreeNode*) node->parent->parent;
+    }
+
+    return nullptr;
+}
+
+IntegerBlackRedTreeNode* IntegerBlackRedTree::uncle(IntegerBlackRedTreeNode* node) {
+    if(this->hasUncle(node)) {
+        IntegerBinaryTreeNode* grandparent = node->parent->parent;
+        return (IntegerBlackRedTreeNode*) (
+            grandparent->left == node->parent ? 
+            grandparent->right : 
+            grandparent->left
+        );
+    }
+
+    return nullptr;
+}
+
+bool IntegerBlackRedTree::hasParent(IntegerBinaryTreeNode* node) {
+    return !!node->parent;
+}
+
+bool IntegerBlackRedTree::hasGrandparent(IntegerBinaryTreeNode* node) {
+    if(hasParent(node)) {
+        return !!node->parent->parent;
+    }
+
+    return false;
+}
+
+bool IntegerBlackRedTree::hasUncle(IntegerBinaryTreeNode* node) {
+    if(hasGrandparent(node)) {
+        IntegerBinaryTreeNode* grandparent = node->parent->parent;
+        return (
+            grandparent->left == node->parent ? 
+            !!grandparent->right : 
+            !!grandparent->left
+        );
+    }
+
+    return false;
 }

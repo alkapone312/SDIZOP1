@@ -80,12 +80,13 @@ void _testAddingToRBT() {
     int fileNumber = getNewFileIndex("rbt");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
-        IntegerBlackRedTree* RBT = new IntegerBlackRedTree();
+        IntegerBlackRedTree* rbt = new IntegerBlackRedTree();
+        _readRBTData(testFileName("rbt", i), rbt);
         t->start();
-        _readRBTData(testFileName("rbt", i), RBT);
+        rbt->add(-1);
         t->stop();
         rbtUi->info("Elapsed time: " + to_string(t->getResult()));
-        delete RBT;
+        delete rbt;
     }
     delete t;
 }

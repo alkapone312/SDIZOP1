@@ -4,7 +4,7 @@ OBJECT_FILES := $(patsubst %.cpp,%.o,$(CPP_FILES))
 all: $(OBJECT_FILES) archive
 
 %.o: %.cpp
-	g++ -c $^ -I ../include
+	g++ -g -c $^ -I ../include
 
 archive: # creates library named SDIZO linking all objects together
 	find . -type f -name "*.o" | xargs ar rsc ../lib/libSDIZO.a
