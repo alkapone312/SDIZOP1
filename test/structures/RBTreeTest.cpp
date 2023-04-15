@@ -2,6 +2,7 @@
 #include "ui/UserInterface.h"
 #include "structures/IntegerBlackRedTree.h"
 #include "utils/FileReader.h"
+#include "utils/FileWriter.h"
 #include "utils/Timer.h"
 #include "Tests.h"
 
@@ -9,6 +10,7 @@ using namespace SDIZO;
 using namespace std;
 
 void _testRBTPerformance();
+void _testRBTPerformanceAutomatic();
 void _testRBTInteractive();
 void _testAddingToRBT();
 void _testDeletingFromRBT();
@@ -25,8 +27,9 @@ void testBlackRedTree() {
         "What would you like to do:",
         "1. Performance test",
         "2. Interactive test",
-        "3. Generate test file",
-        "4. Exit"
+        "3. Automatic performance test",
+        "4. Generate test file",
+        "5. Exit"
     };
     bool run = true;
     while(run) {
@@ -39,9 +42,12 @@ void testBlackRedTree() {
                 _testRBTInteractive();
             break;
             case 3:
-                testFileGeneration("rbt");
+                _testRBTPerformanceAutomatic();
             break;
             case 4:
+                testFileGeneration("rbt");
+            break;
+            case 5:
                 run = false;
             break;
         }
@@ -86,6 +92,7 @@ void _testAddingToRBT() {
         rbt->add(-1);
         t->stop();
         rbtUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete rbt;
     }
     delete t;
@@ -101,6 +108,7 @@ void _testDeletingFromRBT() {
         rbt->remove((IntegerBlackRedTreeNode*)rbt->getRoot());
         t->stop();
         rbtUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete rbt;
     }
     delete t;
@@ -117,9 +125,28 @@ void _testFindingInRBT() {
             RBT->find(max);
         t->stop();
         rbtUi->info("Elapsed time: " + to_string(t->getResult()));
+        FileWriter* w = new FileWriter("results", FileWriter::Mode::APPEND); w->write(to_string(t->getResult()) + "\n"); delete w;
         delete RBT;
     }
     delete t;
+}
+
+void _testRBTPerformanceAutomatic() {
+    int lengths[] = {10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000, 7000000, 8000000, 10000000};
+    for(int h = 0 ; h < 1; h++) {
+        rbtUi->info("Generating new test files...");
+        _deleteTestFiles("rbt");
+        for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
+            _generateTestFile("rbt", lengths[i]);
+        }
+        rbtUi->info("Testing adding to RBT");
+        _testAddingToRBT();
+        rbtUi->info("Testing deleting from RBT");
+        _testDeletingFromRBT();
+        rbtUi->info("Testing finding in RBT");
+        _testFindingInRBT();
+    }
+    _deleteTestFiles("rbt");
 }
 
 void _testRBTInteractive() {

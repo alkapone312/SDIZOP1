@@ -16,7 +16,45 @@ void IntegerBlackRedTree::add(int key) {
 }
 
 void IntegerBlackRedTree::remove(IntegerBlackRedTreeNode* node) {
-    
+    if(node->count > 1) {
+        node->count--;
+        return;
+    }
+
+    IntegerBlackRedTreeNode* x;
+    IntegerBlackRedTreeNode* y;
+
+    y = node;
+    int originalColor = color(y);
+    if (left(node) == nullptr) {
+        x = right(node);
+        transplant(node, right(node));
+    } else if (right(node) == nullptr) {
+        x = left(node);
+        transplant(node, left(node));
+    } else {
+        y = (IntegerBlackRedTreeNode*) getMinKey(right(node));
+        originalColor = color(y);
+        x = right(y);
+        if (parent(y) == node && x) {
+            x->parent = y;
+        } else {
+            transplant(y, right(y));
+            y->right = right(node);
+            if(y->right) {
+                y->right->parent = y;
+            }
+        }
+
+        transplant(node, y);
+        y->left = left(node);
+        y->left->parent = y;
+        setColor(y, color(node));
+    }
+    delete node;
+    if (originalColor == BLACK) {
+        deleteFix(x);
+    }
 }
 
 IntegerBlackRedTreeNode* IntegerBlackRedTree::getRoot() {
@@ -24,7 +62,102 @@ IntegerBlackRedTreeNode* IntegerBlackRedTree::getRoot() {
 }
 
 void IntegerBlackRedTree::deleteFix(IntegerBlackRedTreeNode* &node) {
+    if (node == nullptr)
+    return;
 
+    if (node == root) {
+        root = nullptr;
+        return;
+    }
+
+    if (color(node) == RED || color(left(node)) == RED || color(right(node)) == RED) {
+        IntegerBlackRedTreeNode* child = left(node) != nullptr ? left(node) : right(node);
+
+        if (node == node->parent->left) {
+            node->parent->left = child;
+            if (child != nullptr)
+                child->parent = node->parent;
+            setColor(child, BLACK);
+            delete node;
+        } else {
+            node->parent->right = child;
+            if (child != nullptr)
+                child->parent = node->parent;
+            setColor(child, BLACK);
+            delete node;
+        }
+    } else {
+        IntegerBlackRedTreeNode* sibling = nullptr;
+        IntegerBlackRedTreeNode* p = nullptr;
+        IntegerBlackRedTreeNode* ptr = node;
+        setColor(ptr, DOUBLE_BLACK);
+        while (ptr != root && color(ptr) == DOUBLE_BLACK) {
+            p = parent(ptr);
+            if (ptr == p->left) {
+                sibling = right(p);
+                if (color(sibling) == RED) {
+                    setColor(sibling, BLACK);
+                    setColor(p, RED);
+                    rotateLeft(p);
+                } else {
+                    if (color(left(sibling)) == BLACK && color(right(sibling)) == BLACK) {
+                        setColor(sibling, RED);
+                        if(color(p) == RED)
+                            setColor(p, BLACK);
+                        else
+                            setColor(p, DOUBLE_BLACK);
+                        ptr = p;
+                    } else {
+                        if (color(right(sibling)) == BLACK) {
+                            setColor(left(sibling), BLACK);
+                            setColor(sibling, RED);
+                            rotateRight(sibling);
+                            sibling = right(p);
+                        }
+                        setColor(sibling, p->color);
+                        setColor(p, BLACK);
+                        setColor(right(sibling), BLACK);
+                        rotateLeft(p);
+                        break;
+                    }
+                }
+            } else {
+                sibling = left(p);
+                if (color(sibling) == RED) {
+                    setColor(sibling, BLACK);
+                    setColor(p, RED);
+                    rotateRight(p);
+                } else {
+                    if (color(left(sibling)) == BLACK && color(right(sibling)) == BLACK) {
+                        setColor(sibling, RED);
+                        if (color(p) == RED)
+                            setColor(p, BLACK);
+                        else
+                            setColor(p, DOUBLE_BLACK);
+                        ptr = p;
+                    } else {
+                        if (color(left(sibling)) == BLACK) {
+                            setColor(right(sibling), BLACK);
+                            setColor(sibling, RED);
+                            rotateLeft(sibling);
+                            sibling = left(p);
+                        }
+                        setColor(sibling, color(p));
+                        setColor(p, BLACK);
+                        setColor(left(sibling), BLACK);
+                        rotateRight(p);
+                        break;
+                    }
+                }
+            }
+        }
+        if (node == node->parent->left)
+            node->parent->left = nullptr;
+        else
+            node->parent->right = nullptr;
+        delete node;
+        setColor(getRoot(), BLACK);
+    }
 }
 
 void IntegerBlackRedTree::insertFix(IntegerBlackRedTreeNode* &newNode) {
@@ -85,10 +218,16 @@ void IntegerBlackRedTree::setColor(IntegerBlackRedTreeNode* node, int color) {
 }
 
 IntegerBlackRedTreeNode* IntegerBlackRedTree::left(IntegerBlackRedTreeNode* node) {
+    if(!node)
+        return nullptr;
+
     return (IntegerBlackRedTreeNode*) node->left;
 }
 
 IntegerBlackRedTreeNode* IntegerBlackRedTree::right(IntegerBlackRedTreeNode* node) {
+    if(!node)
+        return nullptr;
+        
     return (IntegerBlackRedTreeNode*) node->right;
 }
 

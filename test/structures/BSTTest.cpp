@@ -56,7 +56,7 @@ void testBinarySearchTree() {
 
 void _testBSTPerformanceAutomatic() {
     int lengths[] = {10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000, 7000000, 8000000, 10000000};
-    for(int h = 0 ; h < 90; h++) {
+    for(int h = 0 ; h < 10; h++) {
         bstUi->info("Generating new test files...");
         _deleteTestFiles("bst");
         for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
