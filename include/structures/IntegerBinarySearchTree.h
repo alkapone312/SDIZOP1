@@ -22,11 +22,12 @@ namespace SDIZO {
             IntegerBinaryTreeNode* add(int value);
             
             /**
-             * @brief Removes node from tree
+             * @brief Remove node
              * 
+             * @param node 
              * @return int 
              */
-            IntegerBinaryTreeNode* remove(IntegerBinaryTreeNode* node);
+            int remove(IntegerBinaryTreeNode* node);
 
             /**
              * @brief Finds node with provided value

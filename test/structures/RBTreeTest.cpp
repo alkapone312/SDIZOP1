@@ -95,15 +95,13 @@ void _testDeletingFromRBT() {
     int fileNumber = getNewFileIndex("rbt");
     Timer* t = new Timer();
     for(int i = 0 ; i < fileNumber; i++) {
-        IntegerBlackRedTree* RBT = new IntegerBlackRedTree();
-        int fileLength = _readRBTData(testFileName("rbt", i), RBT);
+        IntegerBlackRedTree* rbt = new IntegerBlackRedTree();
+        int fileLength = _readRBTData(testFileName("rbt", i), rbt);
         t->start();
-            for(int i = 0 ; i < fileLength; i++) {
-                RBT->remove((IntegerBlackRedTreeNode*)RBT->getRoot());
-            }
+        rbt->remove((IntegerBlackRedTreeNode*)rbt->getRoot());
         t->stop();
         rbtUi->info("Elapsed time: " + to_string(t->getResult()));
-        delete RBT;
+        delete rbt;
     }
     delete t;
 }

@@ -12,66 +12,70 @@ IntegerBinaryTreeNode* IntegerBinarySearchTree::add(int value) {
     //new node as root if empty
     IntegerBinaryTreeNode* newNode = new IntegerBinaryTreeNode;
     newNode->value = value;
-    newNode->count = 1;
 
     return this->add(newNode);
 }
 
-IntegerBinaryTreeNode* IntegerBinarySearchTree::remove(IntegerBinaryTreeNode* node) {
-    IntegerBinaryTreeNode* successor;
-    IntegerBinaryTreeNode* successorsChild;
-
+int IntegerBinarySearchTree::remove(IntegerBinaryTreeNode* node) {
     if(node->count > 1) {
         node->count--;
-
-        return node;
+        return node->value;
     }
 
-    // if tree is empty
-    if(this->root == nullptr) {
-        throw new Exception((char*)"Tried to remove out of empty tree!");
-    }
-
-    // find successor, itself if dont have children
-    if(node->left == nullptr || node->right == nullptr) {
-        successor = node;
-    } else {
-        successor = findSuccessor(node);
-    }
-
-    // get succesor child if any
-    successorsChild = successor->right;
-    if(successor->left != nullptr) 
-        successorsChild = successor->left;
-
-    //make parent of the child parent of the successor
-    if(successorsChild != nullptr)
-        successorsChild->parent = successor->parent;
-
-    // swap with root if successor is root    
-    if(successor->parent == nullptr) {
+    //handle root
+    if(!node->parent && !node->left && !node->right) {
+        int buff = this->root->value;
         delete this->root;
-        this->root = successorsChild;
-    }
-    else {
-        // swap and delete nodes
-        if(successor == successor->parent->left) {
-            delete successor->parent->left;
-            successor->parent->left = successorsChild;
-        }
-        else {
-            delete successor->parent->right;
-            successor->parent->right = successorsChild;
-        }
+        this->root = nullptr;
+        return buff;
     }
 
-    //copy old node value
-    if(successor != node) {
+    //delete leaf node
+    if(node->parent && !node->left && !node->right) {
+        if(node->parent->left == node)
+            node->parent->left = nullptr;
+        else
+            node->parent->right = nullptr;
+        int buff = node->value;
+        delete node;
+        return buff;
+    }
+
+    //handle one child subtree
+    if((node->left || node->right) && node->parent) {
+        if(node->parent && node->left && !node->right) {
+            if(node->parent->left == node) {
+                node->parent->left = node->left;
+                node->left->parent = node->parent;
+            } else {
+                node->parent->right = node->left;
+                node->left->parent = node->parent;
+            }
+        } else if (node->parent && node->right && !node->left) {
+            if(node->parent->left == node) {
+                node->parent->left = node->right;
+                node->right->parent = node->parent;
+            } else {
+                node->parent->right = node->right;
+                node->right->parent = node->parent;
+            }
+        }
+    
+        int buff = node->value;
+        delete node;
+        return buff;
+    }
+
+    //handle two childs
+    IntegerBinaryTreeNode* successor = findSuccessor(node);
+    successor = successor ? successor : findPredecessor(node);
+    int buff = node->value;
+    if(successor) {
         node->value = successor->value;
-        node->count = successor->count;
+        this->remove(successor);
     }
+    return buff;
 
-    return successor;
 }
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::find(int value) {
@@ -166,9 +170,9 @@ void IntegerBinarySearchTree::rotateRight(IntegerBinaryTreeNode* node) {
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::add(IntegerBinaryTreeNode* node) {
     if(this->root == nullptr) {
-            this->root = node;
-            return node;
-        }
+        this->root = node;
+        return node;
+    }
 
     // search for new node position
     IntegerBinaryTreeNode* oneBehindActual;
@@ -185,6 +189,7 @@ IntegerBinaryTreeNode* IntegerBinarySearchTree::add(IntegerBinaryTreeNode* node)
         }
         if(actual->value == node->value)
             actual->count++;
+            delete node;
             return actual;
     }
 
@@ -228,33 +233,22 @@ void IntegerBinarySearchTree::postOrder(const std::function<void(int)>& func, In
 
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::findSuccessor(IntegerBinaryTreeNode* node) {
-    if(node->right) 
+    if(node->right) {
         return getMinKey(node->right);
-    IntegerBinaryTreeNode* buff = node->parent;
-    while(buff != nullptr && buff->left != node) {
-        node = buff;
-        buff = buff->parent;
-    } 
+    }
 
-    return buff;
+    return nullptr;
 }
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::findPredecessor(IntegerBinaryTreeNode* node) {
     if(node->left) 
         return getMaxKey(node->left);
-    IntegerBinaryTreeNode* buff = node->parent;
-    while(buff != nullptr && buff->right != node) {
-        node = buff;
-        buff = buff->parent;
-    } 
 
-    return buff;
+    return nullptr;
 }
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::getMinKey(IntegerBinaryTreeNode* node) {
-    IntegerBinaryTreeNode* buff;
-    while(node->left != nullptr) {
-        buff = node;
+    while(node->left) {
         node = node->left;
     }
 
@@ -262,9 +256,7 @@ IntegerBinaryTreeNode* IntegerBinarySearchTree::getMinKey(IntegerBinaryTreeNode*
 }
 
 IntegerBinaryTreeNode* IntegerBinarySearchTree::getMaxKey(IntegerBinaryTreeNode* node) {
-    IntegerBinaryTreeNode* buff;
-    while(node->right != nullptr) {
-        buff = node;
+    while(node->right) {
         node = node->right;
     }
 

@@ -56,7 +56,7 @@ void testBinarySearchTree() {
 
 void _testBSTPerformanceAutomatic() {
     int lengths[] = {10000, 100000, 1000000, 2000000, 3000000, 4000000, 5000000, 7000000, 8000000, 10000000};
-    for(int h = 0 ; h < 1; h++) {
+    for(int h = 0 ; h < 90; h++) {
         bstUi->info("Generating new test files...");
         _deleteTestFiles("bst");
         for(int i = 0 ; i < sizeof(lengths)/sizeof(lengths[0]); i++) {
@@ -185,9 +185,8 @@ void _testBSTInteractive() {
         try {
             _printBSTree(tree->getRoot());
             buff = tree->find(bstUi->getNumber());
-            buff = tree->remove(buff);
-            bstUi->info("Deleted node: " + to_string(buff->value));
-            _printNodePath(buff);
+            tree->remove(buff);
+            bstUi->info("Node deleted");
             _printBSTree(tree->getRoot());
         } catch(Exception* e) {
             bstUi->error(e->getMessage());
