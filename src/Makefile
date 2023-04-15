@@ -7,5 +7,5 @@ all: $(OBJECT_FILES) archive
 	g++ -c $^ -I ../include
 
 archive: # creates library named SDIZO linking all objects together
-	find . -type f -name "*.o" | xargs ar rsc ../lib/libSDIZO.a
+	ar rsc ../lib/libSDIZO.a $(wildcard **/*.o) $(wildcard *.o)
 
