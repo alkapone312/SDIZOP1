@@ -1,4 +1,8 @@
 bin/
 lib/
 .vscode/
-testfiles/
+testfiles/array/*
+testfiles/bst/*
+testfiles/heap/*
+testfiles/list/*
+testfiles/rbt/*
