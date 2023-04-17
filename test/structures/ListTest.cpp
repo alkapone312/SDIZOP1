@@ -35,7 +35,8 @@ void testDoubleSidedList() {
         "2. Interactive test",
         "3. Automatic performance test",
         "4. Generate test file",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -95,7 +96,8 @@ void _testListPerformance() {
         "5. Test deleting from list from back.",
         "6. Test deleting from list at index.",
         "7. Test searching in list.",
-        "8. Exit."
+        "8. Exit.",
+        "\0"
     };
     listUi->info("Performance tests are run from testfiles folder under testfiles/list/test{index}.txt. Each testfile will be run through the command that you would like to test. Please note that test file data should be integers separated by white spaces where first integer is the number of incoming data.");
     listUi->wait();
@@ -288,7 +290,8 @@ void _testListInteractive() {
         "8. Find element index.",
         "9. Get element under index.",
         "10. Remove element under index.",
-        "11. Exit."
+        "11. Exit.",
+        "\0"
     };
 
     IntegerDoubleSidedList* list = new IntegerDoubleSidedList();

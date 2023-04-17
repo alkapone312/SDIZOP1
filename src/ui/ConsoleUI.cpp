@@ -19,7 +19,7 @@ int ConsoleUI::getNumber() {
 void ConsoleUI::menu(string* options) {
     try {
         int i = 0;
-        while(true) {
+        while(options[i] != "\0") {
             this->message(options[i]);
             i++;
         }

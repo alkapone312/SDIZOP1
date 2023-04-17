@@ -29,7 +29,8 @@ void testBlackRedTree() {
         "2. Interactive test",
         "3. Automatic performance test",
         "4. Generate test file",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -60,7 +61,8 @@ void _testRBTPerformance() {
         "1. Add to tree",
         "2. Find element in tree",
         "3. Remove element from tree",
-        "4. Exit"
+        "4. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -156,7 +158,8 @@ void _testRBTInteractive() {
         "2. Find element in tree",
         "3. Remove element from tree",
         "4. Print tree",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     IntegerBlackRedTree* tree = new IntegerBlackRedTree;
     IntegerBinaryTreeNode* buff;

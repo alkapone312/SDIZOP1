@@ -17,7 +17,8 @@ int main (int argc, char* argv[]) {
         "3. Test heap",
         "4. Test binary search tree",
         "5. Test black red tree",
-        "6. Exit"
+        "6. Exit",
+        "\0"
     };
     bool run = true;
     while (run) {

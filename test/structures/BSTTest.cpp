@@ -29,7 +29,8 @@ void testBinarySearchTree() {
         "2. Interactive test",
         "3. Automatic performance test",
         "4. Generate test file",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -78,7 +79,8 @@ void _testBSTPerformance() {
         "1. Add to tree",
         "2. Find element in tree",
         "3. Remove element from tree",
-        "4. Exit"
+        "4. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -158,7 +160,8 @@ void _testBSTInteractive() {
         "4. Rotate right",
         "5. Rotate left",
         "6. Print tree",
-        "7. Exit"
+        "7. Exit",
+        "\0"
     };
     IntegerBinarySearchTree* tree = new IntegerBinarySearchTree;
     IntegerBinaryTreeNode* buff;

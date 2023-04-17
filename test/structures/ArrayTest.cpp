@@ -37,7 +37,8 @@ void testDynamicArray() {
         "2. Interactive test",
         "3. Automatic performance test",
         "4. Generate test file",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -97,7 +98,8 @@ void _testArrayPerformance() {
         "5. Test deleting from array from back.",
         "6. Test deleting from array from middle.",
         "7. Test searching in array.",
-        "8. Exit."
+        "8. Exit.",
+        "\0"
     };
     arrayUi->info("Performance tests are run from testfiles folder under testfiles/array/test{index}.txt. Each testfile will be run through the command that you would like to test. Please note that test file data should be integers separated by white spaces where first integer is the number of incoming data.");
     arrayUi->wait();
@@ -310,7 +312,8 @@ void _testArrayInteractive() {
         "7. Find element index.",
         "8. Get element under index.",
         "9. Remove element under index.",
-        "10. Exit."
+        "10. Exit.",
+        "\0"
     };
 
     IntegerDynamicArray* array = new IntegerDynamicArray();

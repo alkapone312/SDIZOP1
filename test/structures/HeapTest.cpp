@@ -29,7 +29,8 @@ void testMaxHeap() {
         "2. Interactive test",
         "3. Automatic performance test",
         "4. Generate test file",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -78,7 +79,8 @@ void _testHeapPerformance() {
         "1. Test adding to hip",
         "2. Test popping from heap",
         "3. Test finding in heap",
-        "4. Exit"
+        "4. Exit",
+        "\0"
     };
     bool run = true;
     while(run) {
@@ -173,7 +175,8 @@ void _testHeapInteractive() {
         "2. Test deleting from heap",
         "3. Test finding in heap",
         "4. Print heap",
-        "5. Exit"
+        "5. Exit",
+        "\0"
     };
     bool run = true;
     IntegerBinaryHeap* heap = new IntegerBinaryHeap;
