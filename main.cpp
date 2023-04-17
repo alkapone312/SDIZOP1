@@ -11,6 +11,7 @@ using namespace std;
 int main (int argc, char* argv[]) {   
     SDIZO::UserInterface::setInstance(new SDIZO::ConsoleUI());
     SDIZO::UserInterface* ui = SDIZO::UserInterface::getInstance();
+    system("echo ...");
     string options[] = {
         "1. Test double sided list",
         "2. Test dynamic array",

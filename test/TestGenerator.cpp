@@ -3,6 +3,12 @@
 #include "utils/FileWriter.h"
 #include "ui/UserInterface.h"
 
+#ifdef _WIN32
+    #define PATH_DELIMITER "\\"
+#else
+    #define PATH_DELIMITER "/"
+#endif
+
 using namespace std;
 using namespace SDIZO;
 
@@ -20,6 +26,11 @@ int getNewFileIndex(string testFor) {
 }
 
 void _generateTestFile(string testFor, int length) {
+    string mkdir = "mkdir testfiles";
+    mkdir += PATH_DELIMITER;
+    mkdir += testFor;
+    system(mkdir.c_str());
+
     int index = getNewFileIndex(testFor);
 
     RandomNumberGenerator* generator = new RandomNumberGenerator();

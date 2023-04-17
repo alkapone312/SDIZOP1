@@ -285,12 +285,13 @@ void _testListInteractive() {
         "3. Add to list at any index.",
         "4. Pop from list from front.",
         "5. Pop from list from back.",
-        "6. Display list from front.",
-        "7. Display list from back.",
-        "8. Find element index.",
-        "9. Get element under index.",
-        "10. Remove element under index.",
-        "11. Exit.",
+        "6. Remove from list from index",
+        "7. Display list from front.",
+        "8. Display list from back.",
+        "9. Find element index.",
+        "10. Get element under index.",
+        "11. Remove element under index.",
+        "12. Exit.",
         "\0"
     };
 
@@ -337,17 +338,25 @@ void _testListInteractive() {
                 _displayListFromFront(list);
             break;
             case 6:
+                try {
+                    listUi->info("Removed value: " + to_string(list->remove(listUi->getNumber())));
+                } catch(Exception* e) {
+                    listUi->error(e->getMessage());
+                }
                 _displayListFromFront(list);
             break;
             case 7:
-                _displayListFromBack(list);
+                _displayListFromFront(list);
             break;
             case 8:
+                _displayListFromBack(list);
+            break;
+            case 9:
                 buff = listUi->getNumber();
                 listUi->info("Found index: " + to_string(list->find(buff))); 
                 _displayListFromFront(list);
             break;
-            case 9:
+            case 10:
                 try {
                     buff = listUi->getNumber();
                     listUi->info("Number under index: " + to_string(list->get(buff))); 
@@ -356,7 +365,7 @@ void _testListInteractive() {
                 }
                 _displayListFromFront(list);
             break;
-            case 10:
+            case 11:
                 try {
                     buff = listUi->getNumber();
                     listUi->info("Deleted number: " + to_string(list->remove(buff))); 
@@ -365,7 +374,7 @@ void _testListInteractive() {
                 }
                 _displayListFromFront(list);
             break;
-            case 11:
+            case 12:
                 run = false;
             break;
         }

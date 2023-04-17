@@ -305,14 +305,17 @@ void _testArrayInteractive() {
         "What would you like to do:",
         "1. Add to array from front.",
         "2. Add to array from back.",
-        "3. Pop from array from front.",
-        "4. Pop from array from back.",
-        "5. Display array from front.",
-        "6. Display array from back.",
-        "7. Find element index.",
-        "8. Get element under index.",
-        "9. Remove element under index.",
-        "10. Exit.",
+        "3. Add to array at index.",
+        "4. Pop from array from front.",
+        "5. Pop from array from back.",
+        "6. Remove from array from index.",
+        "7. Display array from front.",
+        "8. Display array from back.",
+        "9. Find element index.",
+        "10. Get element under index.",
+        "11. Remove element under index.",
+        "12. Read from test file.",
+        "13. Exit.",
         "\0"
     };
 
@@ -333,13 +336,23 @@ void _testArrayInteractive() {
             break;
             case 3:
                 try {
+                    arrayUi->message("Provide index to insert into.");
+                    buff = arrayUi->getNumber();
+                    array->add(buff, arrayUi->getNumber());
+                } catch (Exception* e) {
+                    arrayUi->error(e->getMessage());
+                }
+                _displayArrayFromFront(array);
+            break;
+            case 4:
+                try {
                     arrayUi->info("Popped value: " + to_string(array->popFront()));
                 } catch(Exception* e) {
                     arrayUi->error(e->getMessage());
                 }
                 _displayArrayFromFront(array);
             break;
-            case 4:
+            case 5:
                 try {
                     arrayUi->info("Popped value: " + to_string(array->popBack()));
                 } catch(Exception* e) {
@@ -347,18 +360,26 @@ void _testArrayInteractive() {
                 }
                 _displayArrayFromFront(array);
             break;
-            case 5:
+            case 6:
+                try {
+                    arrayUi->info("Removed value: " + to_string(array->remove(arrayUi->getNumber())));
+                } catch(Exception* e) {
+                    arrayUi->error(e->getMessage());
+                }
                 _displayArrayFromFront(array);
             break;
-            case 6:
+            case 7:
+                _displayArrayFromFront(array);
+            break;
+            case 8:
                 _displayArrayFromBack(array);
             break;
-            case 7:
+            case 9:
                 buff = arrayUi->getNumber();
                 arrayUi->info("Found index: " + to_string(array->find(buff))); 
                 _displayArrayFromFront(array);
             break;
-            case 8:
+            case 10:
                 try {
                     buff = arrayUi->getNumber();
                     arrayUi->info("Number under index: " + to_string(array->get(buff))); 
@@ -367,7 +388,7 @@ void _testArrayInteractive() {
                 }
                 _displayArrayFromFront(array);
             break;
-            case 9:
+            case 11:
                 try {
                     buff = arrayUi->getNumber();
                     arrayUi->info("Deleted number: " + to_string(array->remove(buff))); 
@@ -376,7 +397,20 @@ void _testArrayInteractive() {
                 }
                 _displayArrayFromFront(array);
             break;
-            case 10:
+            case 12:
+                arrayUi->message("From wich testfile you would like to read?");
+                buff = arrayUi->getNumber();
+                arrayUi->message("1. Read from front 2. Read from back");
+                switch(arrayUi->getNumber()) {
+                    case 1:
+                        _readDataFront(testFileName("array", buff), array);
+                    break;
+                    case 2:
+                        _readDataFront(testFileName("array", buff), array);
+                    break;
+                }
+            break;
+            case 13:
                 run = false;
             break;
         }
