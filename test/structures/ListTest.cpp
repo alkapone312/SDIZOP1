@@ -291,7 +291,8 @@ void _testListInteractive() {
         "9. Find element index.",
         "10. Get element under index.",
         "11. Remove element under index.",
-        "12. Exit.",
+        "12. Read from test file.",
+        "13. Exit.",
         "\0"
     };
 
@@ -375,6 +376,19 @@ void _testListInteractive() {
                 _displayListFromFront(list);
             break;
             case 12:
+                listUi->message("From wich testfile you would like to read?");
+                buff = listUi->getNumber();
+                listUi->message("1. Read from front 2. Read from back");
+                switch(listUi->getNumber()) {
+                    case 1:
+                        _readListDataFront(testFileName("list", buff), list);
+                    break;
+                    case 2:
+                        _readListDataBack(testFileName("list", buff), list);
+                    break;
+                }
+            break;
+            case 13:
                 run = false;
             break;
         }

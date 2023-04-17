@@ -158,7 +158,8 @@ void _testRBTInteractive() {
         "2. Find element in tree",
         "3. Remove element from tree",
         "4. Print tree",
-        "5. Exit",
+        "5. Read from test file",
+        "6. Exit",
         "\0"
     };
     IntegerBlackRedTree* tree = new IntegerBlackRedTree;
@@ -196,6 +197,10 @@ void _testRBTInteractive() {
             _printRBTree(tree->getRoot());
         break;
         case 5:
+            rbtUi->message("From wich testfile you would like to read?");
+            _readRBTData(testFileName("rbt", rbtUi->getNumber()), tree);
+        break;
+        case 6:
             run = false;
         break;
         }

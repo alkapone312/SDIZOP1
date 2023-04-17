@@ -160,7 +160,8 @@ void _testBSTInteractive() {
         "4. Rotate right",
         "5. Rotate left",
         "6. Print tree",
-        "7. Exit",
+        "7. Read from test file",
+        "8. Exit",
         "\0"
     };
     IntegerBinarySearchTree* tree = new IntegerBinarySearchTree;
@@ -211,6 +212,10 @@ void _testBSTInteractive() {
             _printBSTree(tree->getRoot());
         break;
         case 7:
+            bstUi->message("From wich testfile you would like to read?");
+            _readBSTData(testFileName("bst", bstUi->getNumber()), tree);
+        break;
+        case 8:
             run = false;
         break;
         }

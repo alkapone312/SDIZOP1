@@ -175,7 +175,8 @@ void _testHeapInteractive() {
         "2. Test deleting from heap",
         "3. Test finding in heap",
         "4. Print heap",
-        "5. Exit",
+        "5. Read from test file",
+        "6. Exit",
         "\0"
     };
     bool run = true;
@@ -207,6 +208,10 @@ void _testHeapInteractive() {
                 _drawHeap(heap);
             break;
             case 5:
+                heapUi->message("From wich testfile you would like to read?");
+                _readHeapData(testFileName("heap", heapUi->getNumber()), heap);
+            break;
+            case 6:
                 run = false;
             break;
         }
